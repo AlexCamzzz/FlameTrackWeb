@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.flametrack.io/api' // Placeholder for real production URL
+  apiUrl: 'https://flametrack-api-azure-ctdvfeegbqdrenbn.eastus2-01.azurewebsites.net/api'
 };
