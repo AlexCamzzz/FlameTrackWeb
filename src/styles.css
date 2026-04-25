@@ -23,13 +23,13 @@
 }
 
 .theme-nord {
-  --color-bg-app: #242933; /* Lighter, colder blue */
+  --color-bg-app: #242933;
   --color-bg-card: #2E3440;
   --color-bg-input: #3B4252;
   --color-bg-secondary: #434C5E;
   --color-bg-nav: #242933cc;
   --color-text-main: #ECEFF4;
-  --color-text-muted: #88C0D0; /* Frost blue accent */
+  --color-text-muted: #88C0D0;
   --color-text-inverse: #2E3440;
   --color-border: #88C0D01A;
   --color-primary: #88C0D0;
@@ -39,7 +39,7 @@
 }
 
 .theme-deep-midnight {
-  --color-bg-app: #000000; /* Absolute black */
+  --color-bg-app: #000000;
   --color-bg-card: #0A0A0A;
   --color-bg-input: #FFFFFF05;
   --color-bg-secondary: #FFFFFF08;
@@ -55,23 +55,23 @@
 }
 
 .theme-sakura {
-  --color-bg-app: #1D181A; /* Deep plum wine */
-  --color-bg-card: #2A1F24;
-  --color-bg-input: #3D2B32;
-  --color-bg-secondary: #F062921A;
-  --color-bg-nav: #1D181Acc;
-  --color-text-main: #FFE0E9;
-  --color-text-muted: #F06292;
+  --color-bg-app: #FDF2F5; /* Soft Petal Pink */
+  --color-bg-card: #FFFFFF; /* High Clarity White */
+  --color-bg-input: #F9E8EC;
+  --color-bg-secondary: #FCE4EC;
+  --color-bg-nav: #FDF2F5cc;
+  --color-text-main: #4A3137; /* Deep Rose Charcoal */
+  --color-text-muted: #AD8B91;
   --color-text-inverse: #FFFFFF;
   --color-border: #F0629226;
-  --color-primary: #F06292;
-  --color-secondary: #BA68C8;
-  --color-income: #81C784;
-  --color-expense: #FF8A80;
+  --color-primary: #FF8FB1; /* Sakura Pink */
+  --color-secondary: #F48FB1;
+  --color-income: #66BB6A;
+  --color-expense: #E57373;
 }
 
 .theme-forest {
-  --color-bg-app: #0A1210; /* Deep Jungle Green */
+  --color-bg-app: #0A1210;
   --color-bg-card: #121D1A;
   --color-bg-input: #1B2925;
   --color-bg-secondary: #2E7D321A;
@@ -87,7 +87,7 @@
 }
 
 .theme-pride {
-  --color-bg-app: #0D0B14; /* Deep Violet Black */
+  --color-bg-app: #0D0B14;
   --color-bg-card: #16121D;
   --color-bg-input: #1F1926;
   --color-bg-secondary: #FFFFFF08;
