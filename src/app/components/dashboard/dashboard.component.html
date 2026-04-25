@@ -67,6 +67,35 @@
       </div>
     </div>
 
+    <!-- Accounts Summary Section -->
+    <div class="space-y-6 animate-fade-in">
+       <div class="flex justify-between items-center px-2">
+          <h2 class="text-xl font-bold text-white tracking-tight flex items-center space-x-3">
+             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+             <span>My Accounts</span>
+          </h2>
+          <a routerLink="/accounts" class="text-primary hover:text-[#FF7043] transition-colors text-xs font-black uppercase tracking-[0.2em]">Manage All</a>
+       </div>
+       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          @for (acc of summary.accounts; track acc.id) {
+             <div class="card bg-[#2C2938]/40 border-white/5 p-5 hover:translate-y-[-4px] transition-all hover:bg-[#2C2938]/60 group">
+                <div class="flex items-center space-x-4">
+                   <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-xl transition-transform group-hover:rotate-12" 
+                        [style.backgroundColor]="acc.color">
+                      <span class="text-lg">{{ getAccountIcon(acc.type) }}</span>
+                   </div>
+                   <div class="min-w-0">
+                      <p class="text-[10px] font-black text-subtle uppercase tracking-tighter truncate">{{ acc.name }}</p>
+                      <p class="text-sm font-black text-white truncate">{{ acc.balance | currency:acc.currency + ' ' }}</p>
+                   </div>
+                </div>
+             </div>
+          } @empty {
+             <div class="col-span-full py-8 text-center text-subtle font-bold italic card border-dashed border-white/5">No active accounts.</div>
+          }
+       </div>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
       <!-- Recent Transactions (Right side in Desktop screenshot) -->
       <div class="card bg-[#2C2938]/40 border-white/5 shadow-inner">

@@ -1,8 +1,9 @@
 import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
-import { TransactionDto, DashboardSummaryDto, CreateTransactionRequestDto } from '../models/transaction.dto';
+import { TransactionDto, CreateTransactionRequestDto, DashboardSummaryDto } from '../models/transaction.dto';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,25 +11,13 @@ import { firstValueFrom } from 'rxjs';
 export class TransactionService {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
-  private apiUrl = 'http://localhost:7071/api'; // Local Azure Functions port
+  private apiUrl = environment.apiUrl;
 
-  // Signals for State Management
-  private summarySignal = signal<DashboardSummaryDto | null>(null);
   private transactionsSignal = signal<TransactionDto[]>([]);
-
-  // Public Read-only Signals
-  summary = computed(() => this.summarySignal());
   transactions = computed(() => this.transactionsSignal());
 
-  async loadDashboardSummary() {
-    if (!isPlatformBrowser(this.platformId)) return;
-    try {
-      const summary = await firstValueFrom(this.http.get<DashboardSummaryDto>(`${this.apiUrl}/dashboard/summary`));
-      this.summarySignal.set(summary);
-    } catch (error) {
-      console.error('Error loading dashboard summary', error);
-    }
-  }
+  private summarySignal = signal<DashboardSummaryDto | null>(null);
+  summary = computed(() => this.summarySignal());
 
   async loadTransactions() {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -40,16 +29,37 @@ export class TransactionService {
     }
   }
 
-  async createTransaction(request: CreateTransactionRequestDto) {
-    if (!isPlatformBrowser(this.platformId)) throw new Error('Cannot create transaction during SSR');
+  async loadDashboardSummary() {
+    if (!isPlatformBrowser(this.platformId)) return;
     try {
-      const newTx = await firstValueFrom(this.http.post<TransactionDto>(`${this.apiUrl}/transactions`, request));
+      const s = await firstValueFrom(this.http.get<DashboardSummaryDto>(`${this.apiUrl}/dashboard/summary`));
+      this.summarySignal.set(s);
+    } catch (error) {
+      console.error('Error loading summary', error);
+    }
+  }
+
+  async createTransaction(tx: CreateTransactionRequestDto) {
+    if (!isPlatformBrowser(this.platformId)) return;
+    try {
+      const newTx = await firstValueFrom(this.http.post<TransactionDto>(`${this.apiUrl}/transactions`, tx));
       this.transactionsSignal.update(txs => [newTx, ...txs]);
-      // Refresh summary after new transaction
-      await this.loadDashboardSummary();
       return newTx;
     } catch (error) {
       console.error('Error creating transaction', error);
+      throw error;
+    }
+  }
+
+  async deleteTransaction(id: string) {
+    if (!isPlatformBrowser(this.platformId)) return;
+    try {
+      await firstValueFrom(this.http.delete(`${this.apiUrl}/transactions/${id}`));
+      this.transactionsSignal.update(txs => txs.filter(t => t.id !== id));
+      // Optionally reload summary
+      this.loadDashboardSummary();
+    } catch (error) {
+      console.error('Error deleting transaction', error);
       throw error;
     }
   }

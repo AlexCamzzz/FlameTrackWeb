@@ -4,6 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoginRequestDto, RegisterRequestDto, AuthResponseDto, UserDto, UpdateUserRequestDto } from '../models/transaction.dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
-  private apiUrl = 'http://localhost:7071/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   private readonly TOKEN_KEY = 'flametrack_token';
   private readonly USER_KEY = 'flametrack_user';
@@ -76,6 +77,30 @@ export class AuthService {
       return updatedUser;
     } catch (error) {
       console.error('Update profile failed', error);
+      throw error;
+    }
+  }
+
+  async acceptTerms() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    try {
+      const updatedUser = await firstValueFrom(this.http.post<UserDto>(`${this.apiUrl}/accept-terms`, {}));
+      this.currentUser.set(updatedUser);
+      localStorage.setItem(this.USER_KEY, JSON.stringify(updatedUser));
+      return updatedUser;
+    } catch (error) {
+      console.error('Accept terms failed', error);
+      throw error;
+    }
+  }
+
+  async deleteAccount() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    try {
+      await firstValueFrom(this.http.delete(`${this.apiUrl}/profile`));
+      this.logout();
+    } catch (error) {
+      console.error('Delete account failed', error);
       throw error;
     }
   }

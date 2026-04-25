@@ -1,32 +1,169 @@
-@font-face {
-  font-family: 'SourceSans3';
-  src: url('/assets/fonts/SourceSans3-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'SourceSans3';
-  src: url('/assets/fonts/SourceSans3-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@font-face { font-family: 'SourceSans3'; src: url('/assets/fonts/SourceSans3-Regular.ttf'); font-weight: normal; }
+@font-face { font-family: 'SourceSans3'; src: url('/assets/fonts/SourceSans3-Bold.ttf'); font-weight: bold; }
+@font-face { font-family: 'SourceSans3'; src: url('/assets/fonts/SourceSans3-Black.ttf'); font-weight: 900; }
+
+:root {
+  --color-bg-app: #0F0E13;
+  --color-bg-card: #1A191F;
+  --color-bg-input: #0000004D;
+  --color-bg-secondary: #FFFFFF0D;
+  --color-bg-nav: #1A191Fcc;
+  --color-text-main: #FFFFFF;
+  --color-text-muted: #948CA0;
+  --color-text-inverse: #FFFFFF;
+  --color-border: #FFFFFF08; /* Extremely subtle 3% */
+  --color-primary: #FF5722;
+  --color-secondary: #FFAB40;
+  --color-income: #4CAF50;
+  --color-expense: #FF2D55;
+}
+
+.theme-nord {
+  --color-bg-app: #2E3440;
+  --color-bg-card: #3B4252;
+  --color-bg-input: #434C5E;
+  --color-bg-secondary: #4C566A;
+  --color-bg-nav: #2E3440cc;
+  --color-text-main: #ECEFF4;
+  --color-text-muted: #81A1C1;
+  --color-text-inverse: #2E3440;
+  --color-border: #4C566A66; /* Matching Nord palette border */
+  --color-primary: #88C0D0;
+  --color-secondary: #81A1C1;
+  --color-income: #A3BE8C;
+  --color-expense: #BF616A;
+}
+
+.theme-deep-midnight {
+  --color-bg-app: #050505;
+  --color-bg-card: #0F111A;
+  --color-bg-input: #00000066;
+  --color-bg-secondary: #FFFFFF0D;
+  --color-bg-nav: #0F111Acc;
+  --color-text-main: #FFFFFF;
+  --color-text-muted: #A1A1AA;
+  --color-text-inverse: #FFFFFF;
+  --color-border: #FFFFFF05; /* Almost invisible */
+  --color-primary: #7C4DFF;
+  --color-secondary: #00B0FF;
+  --color-income: #00E676;
+  --color-expense: #FF5252;
+}
+
+.theme-sakura {
+  --color-bg-app: #1C191D;
+  --color-bg-card: #252026;
+  --color-bg-input: #00000033;
+  --color-bg-secondary: #FFFFFF0D;
+  --color-bg-nav: #1C191Dcc;
+  --color-text-main: #FCE4EC;
+  --color-text-muted: #AD93A5;
+  --color-text-inverse: #FFFFFF;
+  --color-border: #F0629214;
+  --color-primary: #F06292;
+  --color-secondary: #BA68C8;
+  --color-income: #81C784;
+  --color-expense: #E57373;
+}
+
+.theme-forest {
+  --color-bg-app: #0B100E;
+  --color-bg-card: #141C19;
+  --color-bg-input: #0000004D;
+  --color-bg-secondary: #FFFFFF0D;
+  --color-bg-nav: #0B100Ecc;
+  --color-text-main: #E8F5E9;
+  --color-text-muted: #78909C;
+  --color-text-inverse: #0B100E;
+  --color-border: #2E7D321A;
+  --color-primary: #4CAF50;
+  --color-secondary: #8BC34A;
+  --color-income: #00C853;
+  --color-expense: #FF5252;
+}
+
+.theme-pride {
+  --color-bg-app: #0A090D;
+  --color-bg-card: #15141A;
+  --color-bg-input: #FFFFFF08;
+  --color-bg-secondary: #FFFFFF0D;
+  --color-bg-nav: #15141Acc;
+  --color-text-main: #FFFFFF;
+  --color-text-muted: #ADADB8;
+  --color-text-inverse: #FFFFFF;
+  --color-border: #FFFFFF08;
+  --color-primary: #FF3D00; 
+  --color-secondary: #FFEA00;
+  --color-income: #00E676;
+  --color-expense: #FF1744;
+}
+
 @layer base {
   body {
-    background-color: theme('colors.background');
-    color: white;
+    background-color: var(--color-bg-app);
+    color: var(--color-text-main);
     margin: 0;
-    font-family: 'SourceSans3', ui-sans-serif, system-ui, sans-serif;
+    font-family: 'SourceSans3', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }
 
 @layer components {
   .card {
-    @apply bg-surface rounded-2xl p-5 shadow-lg border border-border/20;
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-main);
+    @apply rounded-[1.5rem] p-8 shadow-sm transition-all duration-300 relative;
   }
+  
+  /* Pride Border Fix */
+  .theme-pride .card::before {
+    content: ""; position: absolute; inset: -1px; border-radius: 1.5rem; padding: 1px;
+    background: linear-gradient(45deg, #E50000, #FF8D00, #FFEE00, #008121, #004CFF, #760188);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    opacity: 0.15; pointer-events: none;
+  }
+  .theme-pride .card { border: none !important; }
+
+  .btn-premium {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse) !important;
+    @apply border border-white/5 px-8 py-4 rounded-xl font-black text-xs uppercase tracking-[0.3em] transition-all active:scale-95 disabled:opacity-20 flex items-center justify-center space-x-2 hover:brightness-110 shadow-sm;
+  }
+
+  .theme-pride .btn-premium {
+    background: linear-gradient(90deg, #E50000, #FF8D00, #FFEE00, #008121, #004CFF, #760188) !important;
+    border: none !important;
+  }
+
+  .btn-secondary {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-main);
+    @apply px-8 py-4 rounded-xl font-black text-xs uppercase tracking-[0.3em] transition-all active:scale-95 disabled:opacity-20 flex items-center justify-center space-x-2 hover:opacity-80;
+  }
+
+  .input-premium {
+    background-color: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-main);
+    @apply rounded-xl px-6 py-5 font-bold text-base focus:outline-none transition-all;
+  }
+  
+  .input-premium:focus { border-color: var(--color-primary); }
+
+  .FT-text-main { color: var(--color-text-main); }
+  .FT-text-subtle { color: var(--color-text-muted); }
+  .FT-bg-surface { background-color: var(--color-bg-card); }
 }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 10px; }

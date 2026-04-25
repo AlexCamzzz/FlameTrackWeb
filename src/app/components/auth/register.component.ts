@@ -1,86 +1,105 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen flex items-center justify-center bg-background relative overflow-hidden py-12">
-      <!-- Decorative Background Elements -->
-      <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[100px]"></div>
-      <div class="absolute bottom-1/4 left-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-[100px]"></div>
-
-      <div class="w-full max-w-md p-8 bg-surface/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl relative z-10">
-        <div class="flex justify-center mb-6">
-          <div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
-            <span class="font-bold text-xl text-white">FT</span>
+    <div class="min-h-screen bg-background flex flex-col items-center justify-center p-6 animate-fade-in transition-colors duration-300">
+      <div class="w-full max-w-md space-y-10">
+        <!-- Brand Identity -->
+        <div class="text-center space-y-4">
+          <img src="/assets/logo.png" alt="FlameTrack" class="w-16 h-16 mx-auto drop-shadow-2xl">
+          <div>
+            <h1 class="text-3xl font-black text-foreground uppercase tracking-tighter">Forge Account</h1>
+            <p class="text-subtle text-[10px] font-black uppercase tracking-[0.4em] opacity-60">Join the Financial Elite</p>
           </div>
         </div>
 
-        <h2 class="text-3xl font-bold text-center mb-2 text-white">Create Account</h2>
-        <p class="text-subtle text-center mb-8">Start tracking your finances today</p>
+        <div class="card !p-10 shadow-2xl border-border">
+          <form (ngSubmit)="onSubmit()" class="space-y-6">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Full Name</label>
+                <input type="text" name="name" [(ngModel)]="model.name" required
+                  class="input-premium w-full shadow-inner" placeholder="Enter identity label">
+              </div>
 
-        <form (ngSubmit)="onSubmit()" class="space-y-4">
-          <div *ngIf="errorMessage" class="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-xl text-sm text-center">
-            {{ errorMessage }}
+              <div>
+                <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Secure Email</label>
+                <input type="email" name="email" [(ngModel)]="model.email" required
+                  class="input-premium w-full shadow-inner" placeholder="nexus@flametrack.io">
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div>
+                    <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Security Key</label>
+                    <input type="password" name="password" [(ngModel)]="model.password" required
+                      class="input-premium w-full shadow-inner" placeholder="••••••••">
+                 </div>
+                 <div>
+                    <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Verify Key</label>
+                    <input type="password" name="confirmPassword" [(ngModel)]="confirmPassword" required
+                      class="input-premium w-full shadow-inner" [class.border-expense]="!passwordsMatch() && confirmPassword" placeholder="••••••••">
+                 </div>
+              </div>
+              
+              <p *ngIf="!passwordsMatch() && confirmPassword" class="text-[9px] font-black text-expense uppercase tracking-widest animate-pulse ml-1">Security keys do not match.</p>
+              <p *ngIf="model.password && !isPasswordStrong()" class="text-[9px] font-black text-expense uppercase tracking-widest opacity-80 ml-1 leading-relaxed">Key must be 8+ chars with uppercase, lowercase, and numeric parameters.</p>
+            </div>
+
+            <div class="pt-4">
+              <button type="submit" [disabled]="isSubmitting || !passwordsMatch() || !isPasswordStrong() || !model.name || !model.email" 
+                class="btn-premium w-full py-5">
+                {{ isSubmitting ? 'Syncing...' : 'Forge Account' }}
+              </button>
+            </div>
+          </form>
+
+          <div class="mt-8 pt-8 border-t border-border text-center">
+            <p class="text-subtle text-[10px] font-black uppercase tracking-widest opacity-60">Already registered?</p>
+            <a routerLink="/login" class="text-primary text-[10px] font-black uppercase tracking-widest hover:underline mt-2 inline-block">Return to Terminal</a>
           </div>
-
-          <div>
-            <label class="block text-sm font-medium text-subtle mb-1.5 ml-1">Full Name</label>
-            <input type="text" name="name" [(ngModel)]="model.name" required
-              class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-subtle/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-              placeholder="John Doe">
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-subtle mb-1.5 ml-1">Email</label>
-            <input type="email" name="email" [(ngModel)]="model.email" required
-              class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-subtle/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-              placeholder="name@example.com">
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-subtle mb-1.5 ml-1">Password</label>
-            <input type="password" name="password" [(ngModel)]="model.password" required
-              class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-subtle/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-              placeholder="••••••••">
-          </div>
-
-          <button type="submit" [disabled]="isSubmitting" 
-            class="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white rounded-xl px-4 py-3 font-bold transition-all disabled:opacity-50 mt-6 shadow-lg shadow-primary/20">
-            {{ isSubmitting ? 'Creating account...' : 'Sign up' }}
-          </button>
-        </form>
-
-        <p class="text-center text-subtle mt-8 text-sm">
-          Already have an account? 
-          <a routerLink="/login" class="text-primary hover:text-secondary font-medium transition-colors">Sign in</a>
-        </p>
+        </div>
       </div>
     </div>
   `
 })
 export class RegisterComponent {
-  private authService = inject(AuthService);
-  
+  authService = inject(AuthService);
+  private router = inject(Router);
+
   isSubmitting = false;
-  errorMessage = '';
-  model = { name: '', email: '', password: '' };
+  confirmPassword = '';
+  model = {
+    name: '',
+    email: '',
+    password: ''
+  };
+
+  passwordsMatch(): boolean {
+    return this.model.password === this.confirmPassword && this.model.password.length > 0;
+  }
+
+  isPasswordStrong(): boolean {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    return regex.test(this.model.password);
+  }
 
   async onSubmit() {
-    if (!this.model.name || !this.model.email || !this.model.password) return;
-
+    if (!this.passwordsMatch() || !this.isPasswordStrong()) return;
+    
     this.isSubmitting = true;
-    this.errorMessage = '';
-
     try {
       await this.authService.register(this.model);
-    } catch (error: any) {
-      this.errorMessage = error.error?.message || 'Failed to register';
+      this.router.navigate(['/']);
+    } catch (e: any) {
+      alert(e.error?.message || 'Synchronization failed.');
     } finally {
       this.isSubmitting = false;
     }

@@ -1,3 +1,4 @@
+import { environment } from '../../environments/environment';
 import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
@@ -10,7 +11,7 @@ import { firstValueFrom } from 'rxjs';
 export class CategoryService {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
-  private apiUrl = 'http://localhost:7071/api';
+  private apiUrl = `${environment.apiUrl}`;
 
   private categoriesSignal = signal<CategoryDto[]>([]);
   categories = computed(() => this.categoriesSignal());

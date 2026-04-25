@@ -1,24 +1,18 @@
+import { environment } from '../../environments/environment';
 import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
-import { DashboardBudgetDto, CreateTransactionRequestDto } from '../models/transaction.dto'; // Using simple models here or extracting them
+import { BudgetDto, CreateBudgetRequestDto } from '../models/transaction.dto';
 import { firstValueFrom } from 'rxjs';
 
-export interface BudgetDto {
-  id: string;
-  categoryId: string;
-  limit: number;
-  month: number;
-  year: number;
-}
-
+/** Service to manage budget allocations */
 @Injectable({
   providedIn: 'root'
 })
 export class BudgetService {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
-  private apiUrl = 'http://localhost:7071/api';
+  private apiUrl = `${environment.apiUrl}`;
 
   private budgetsSignal = signal<BudgetDto[]>([]);
   budgets = computed(() => this.budgetsSignal());
@@ -34,7 +28,7 @@ export class BudgetService {
     }
   }
 
-  async createBudget(budget: Omit<BudgetDto, 'id'>) {
+  async createBudget(budget: CreateBudgetRequestDto) {
     if (!isPlatformBrowser(this.platformId)) return;
     try {
       const newBudget = await firstValueFrom(this.http.post<BudgetDto>(`${this.apiUrl}/budgets`, budget));
