@@ -1,0 +1,17 @@
+{
+  "name": "FlameTrack",
+  "short_name": "FlameTrack",
+  "theme_color": "#0F0E13",
+  "background_color": "#0F0E13",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
