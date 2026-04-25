@@ -1,59 +1,46 @@
-# FlametrackApp
+# FlameTrack — Premium Financial Terminal
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
+![FlameTrack Logo](public/assets/logo.png)
 
-## Development server
+FlameTrack is a high-end, minimalist personal finance application designed for precision asset management and strategic financial intelligence. Built with an "Arctic Nord" aesthetic, it prioritizes information density, data sovereignty, and a frictionless user experience.
 
-To start a local development server, run:
+## 💎 Core Features
 
-```bash
-ng serve
-```
+- **Progressive Web App (PWA):** Install FlameTrack directly on your mobile device or desktop for a native, full-screen experience with instant loading.
+- **Dynamic Theming Engine:** Choose from 6 meticulously crafted semantic themes, including *Nord Arctic*, *Deep Midnight*, and *Sakura Blossom*.
+- **Integrated Financial Intelligence:** Real-time synchronization between the Global Ledger, Budget Provisions, and Strategic Goals.
+- **Zero-Trust Security:** Hardened identity management with 1-hour rolling sessions and cryptographic signature validation.
+- **Privacy First:** Built-in "Right to be Forgotten" (account termination) and a strict data-ownership model.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🚀 Tech Stack
 
-## Code scaffolding
+- **Framework:** Angular 21 (Standalone Components, Signals, Native Control Flow).
+- **Styling:** Tailwind CSS + Semantic CSS Variables.
+- **Installation:** Angular PWA + Service Workers.
+- **Deployment:** AWS Amplify (Frontend) / Azure Functions (Backend).
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🛠️ Local Development
 
-```bash
-ng generate component component-name
-```
+1. **Clone the terminal:**
+   ```bash
+   git clone https://github.com/AlexCamzzz/FlameTrackWeb.git
+   ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+2. **Initialize dependencies:**
+   ```bash
+   npm install
+   ```
 
-```bash
-ng generate --help
-```
+3. **Deploy local environment:**
+   ```bash
+   ng serve
+   ```
 
-## Building
+4. **Access portal:** `http://localhost:4200`
 
-To build the project run:
+## ⚖️ Governance
 
-```bash
-ng build
-```
+FlameTrack operates under a strict virtual utility mandate. All financial parameters are processed via proprietary secure session protocols. For more details, consult the **Legal & Privacy** section within the application.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+**Coded with Integrity by Alex Cardona.**
