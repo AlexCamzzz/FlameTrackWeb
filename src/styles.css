@@ -15,7 +15,7 @@
   --color-text-main: #FFFFFF;
   --color-text-muted: #948CA0;
   --color-text-inverse: #FFFFFF;
-  --color-border: #FFFFFF08; /* Extremely subtle 3% */
+  --color-border: #FFFFFF08;
   --color-primary: #FF5722;
   --color-secondary: #FFAB40;
   --color-income: #4CAF50;
@@ -23,15 +23,15 @@
 }
 
 .theme-nord {
-  --color-bg-app: #2E3440;
-  --color-bg-card: #3B4252;
-  --color-bg-input: #434C5E;
-  --color-bg-secondary: #4C566A;
-  --color-bg-nav: #2E3440cc;
+  --color-bg-app: #242933; /* Lighter, colder blue */
+  --color-bg-card: #2E3440;
+  --color-bg-input: #3B4252;
+  --color-bg-secondary: #434C5E;
+  --color-bg-nav: #242933cc;
   --color-text-main: #ECEFF4;
-  --color-text-muted: #81A1C1;
+  --color-text-muted: #88C0D0; /* Frost blue accent */
   --color-text-inverse: #2E3440;
-  --color-border: #4C566A66; /* Matching Nord palette border */
+  --color-border: #88C0D01A;
   --color-primary: #88C0D0;
   --color-secondary: #81A1C1;
   --color-income: #A3BE8C;
@@ -39,64 +39,64 @@
 }
 
 .theme-deep-midnight {
-  --color-bg-app: #050505;
-  --color-bg-card: #0F111A;
-  --color-bg-input: #00000066;
-  --color-bg-secondary: #FFFFFF0D;
-  --color-bg-nav: #0F111Acc;
+  --color-bg-app: #000000; /* Absolute black */
+  --color-bg-card: #0A0A0A;
+  --color-bg-input: #FFFFFF05;
+  --color-bg-secondary: #FFFFFF08;
+  --color-bg-nav: #000000cc;
   --color-text-main: #FFFFFF;
-  --color-text-muted: #A1A1AA;
+  --color-text-muted: #666666;
   --color-text-inverse: #FFFFFF;
-  --color-border: #FFFFFF05; /* Almost invisible */
-  --color-primary: #7C4DFF;
-  --color-secondary: #00B0FF;
+  --color-border: #FFFFFF05;
+  --color-primary: #BB86FC;
+  --color-secondary: #03DAC6;
+  --color-income: #00E676;
+  --color-expense: #CF6679;
+}
+
+.theme-sakura {
+  --color-bg-app: #1D181A; /* Deep plum wine */
+  --color-bg-card: #2A1F24;
+  --color-bg-input: #3D2B32;
+  --color-bg-secondary: #F062921A;
+  --color-bg-nav: #1D181Acc;
+  --color-text-main: #FFE0E9;
+  --color-text-muted: #F06292;
+  --color-text-inverse: #FFFFFF;
+  --color-border: #F0629226;
+  --color-primary: #F06292;
+  --color-secondary: #BA68C8;
+  --color-income: #81C784;
+  --color-expense: #FF8A80;
+}
+
+.theme-forest {
+  --color-bg-app: #0A1210; /* Deep Jungle Green */
+  --color-bg-card: #121D1A;
+  --color-bg-input: #1B2925;
+  --color-bg-secondary: #2E7D321A;
+  --color-bg-nav: #0A1210cc;
+  --color-text-main: #E8F5E9;
+  --color-text-muted: #81C784;
+  --color-text-inverse: #0A1210;
+  --color-border: #2E7D3233;
+  --color-primary: #66BB6A;
+  --color-secondary: #9CCC65;
   --color-income: #00E676;
   --color-expense: #FF5252;
 }
 
-.theme-sakura {
-  --color-bg-app: #1C191D;
-  --color-bg-card: #252026;
-  --color-bg-input: #00000033;
-  --color-bg-secondary: #FFFFFF0D;
-  --color-bg-nav: #1C191Dcc;
-  --color-text-main: #FCE4EC;
-  --color-text-muted: #AD93A5;
-  --color-text-inverse: #FFFFFF;
-  --color-border: #F0629214;
-  --color-primary: #F06292;
-  --color-secondary: #BA68C8;
-  --color-income: #81C784;
-  --color-expense: #E57373;
-}
-
-.theme-forest {
-  --color-bg-app: #0B100E;
-  --color-bg-card: #141C19;
-  --color-bg-input: #0000004D;
-  --color-bg-secondary: #FFFFFF0D;
-  --color-bg-nav: #0B100Ecc;
-  --color-text-main: #E8F5E9;
-  --color-text-muted: #78909C;
-  --color-text-inverse: #0B100E;
-  --color-border: #2E7D321A;
-  --color-primary: #4CAF50;
-  --color-secondary: #8BC34A;
-  --color-income: #00C853;
-  --color-expense: #FF5252;
-}
-
 .theme-pride {
-  --color-bg-app: #0A090D;
-  --color-bg-card: #15141A;
-  --color-bg-input: #FFFFFF08;
-  --color-bg-secondary: #FFFFFF0D;
-  --color-bg-nav: #15141Acc;
+  --color-bg-app: #0D0B14; /* Deep Violet Black */
+  --color-bg-card: #16121D;
+  --color-bg-input: #1F1926;
+  --color-bg-secondary: #FFFFFF08;
+  --color-bg-nav: #0D0B14cc;
   --color-text-main: #FFFFFF;
-  --color-text-muted: #ADADB8;
+  --color-text-muted: #D1C4E9;
   --color-text-inverse: #FFFFFF;
-  --color-border: #FFFFFF08;
-  --color-primary: #FF3D00; 
+  --color-border: #D1C4E91A;
+  --color-primary: #FF4081; 
   --color-secondary: #FFEA00;
   --color-income: #00E676;
   --color-expense: #FF1744;
@@ -109,7 +109,7 @@
     margin: 0;
     font-family: 'SourceSans3', sans-serif;
     -webkit-font-smoothing: antialiased;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
@@ -121,21 +121,20 @@
     @apply rounded-[1.5rem] p-8 shadow-sm transition-all duration-300 relative;
   }
   
-  /* Pride Border Fix */
   .theme-pride .card::before {
     content: ""; position: absolute; inset: -1px; border-radius: 1.5rem; padding: 1px;
     background: linear-gradient(45deg, #E50000, #FF8D00, #FFEE00, #008121, #004CFF, #760188);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor; mask-composite: exclude;
-    opacity: 0.15; pointer-events: none;
+    opacity: 0.25; pointer-events: none;
   }
   .theme-pride .card { border: none !important; }
 
   .btn-premium {
     background-color: var(--color-primary);
     color: var(--color-text-inverse) !important;
-    @apply border border-white/5 px-8 py-4 rounded-xl font-black text-xs uppercase tracking-[0.3em] transition-all active:scale-95 disabled:opacity-20 flex items-center justify-center space-x-2 hover:brightness-110 shadow-sm;
+    @apply border border-white/5 px-8 py-4 rounded-xl font-black text-xs uppercase tracking-[0.3em] transition-all active:scale-95 disabled:opacity-20 flex items-center justify-center space-x-2 hover:brightness-110 shadow-lg;
   }
 
   .theme-pride .btn-premium {
@@ -154,7 +153,7 @@
     background-color: var(--color-bg-input);
     border: 1px solid var(--color-border);
     color: var(--color-text-main);
-    @apply rounded-xl px-6 py-5 font-bold text-base focus:outline-none transition-all;
+    @apply rounded-xl px-6 py-5 font-bold text-base focus:outline-none transition-all shadow-inner;
   }
   
   .input-premium:focus { border-color: var(--color-primary); }
