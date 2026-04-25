@@ -8,6 +8,9 @@ import { LoginComponent } from './components/auth/login.component';
 import { RegisterComponent } from './components/auth/register.component';
 import { authGuard } from './auth.guard';
 
+import { AccountComponent } from './components/settings/account/account.component';
+import { PreferencesComponent } from './components/settings/preferences/preferences.component';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
@@ -16,6 +19,8 @@ export const routes: Routes = [
   { path: 'budgets', component: BudgetsComponent, canActivate: [authGuard] },
   { path: 'goals', component: GoalsComponent, canActivate: [authGuard] },
   { path: 'categories', component: CategoriesComponent, canActivate: [authGuard] },
+  { path: 'account', component: AccountComponent, canActivate: [authGuard] },
+  { path: 'preferences', component: PreferencesComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: '' }
 ];
 

@@ -48,6 +48,36 @@ export interface CategoryDto {
   isStandard: boolean;
 }
 
+export interface UserDto {
+  id: string;
+  name: string;
+  email: string;
+  nickname?: string;
+  avatar?: string;
+}
+
+export interface UpdateUserRequestDto {
+  name?: string;
+  nickname?: string;
+  avatar?: string;
+}
+
+export interface LoginRequestDto {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequestDto {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface AuthResponseDto {
+  token: string;
+  user: UserDto;
+}
+
 export interface DashboardSummaryDto {
   totalBalance: number;
   monthlyIncome: number;

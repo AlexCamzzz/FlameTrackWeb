@@ -25,8 +25,8 @@ export class CategoryService {
     }
   }
 
-  async createCategory(name: string, color?: string) {
-    if (!isPlatformBrowser(this.platformId)) return;
+  async createCategory(name: string, color?: string): Promise<CategoryDto | undefined> {
+    if (!isPlatformBrowser(this.platformId)) return undefined;
     try {
       const payload = color ? { name, color } : { name };
       const newCategory = await firstValueFrom(this.http.post<CategoryDto>(`${this.apiUrl}/categories`, payload));
@@ -34,7 +34,7 @@ export class CategoryService {
       return newCategory;
     } catch (error) {
       console.error('Error creating category', error);
-      throw error;
+      return undefined;
     }
   }
 
