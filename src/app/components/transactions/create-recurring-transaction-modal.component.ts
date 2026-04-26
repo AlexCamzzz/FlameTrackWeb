@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, inject, OnInit, ChangeDetectionStrateg
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RecurringTransactionService } from '../../services/recurring-transaction.service';
+import { TutorialService } from '../../services/tutorial.service';
 import { CreateRecurringTransactionRequestDto, TransactionTypeDto, RecurrenceFrequency, CategoryDto, AccountDto } from '../../models/transaction.dto';
 import { CategoryPickerModalComponent } from '../transactions/category-picker-modal.component';
 import { CategoryService } from '../../services/category.service';
@@ -18,7 +19,10 @@ import { AccountPickerModalComponent } from '../accounts/account-picker-modal.co
       <div class="card !p-0 w-full max-w-lg overflow-hidden animate-slide-up border-border shadow-2xl" (click)="$event.stopPropagation()">
         
         <div class="p-8 border-b border-border flex justify-between items-center bg-foreground/[0.02]">
-          <h2 class="text-xl font-black text-foreground uppercase tracking-tight">Recurring Setup</h2>
+          <div class="flex items-center space-x-3">
+            <h2 class="text-xl font-black text-foreground uppercase tracking-tight">Recurring Setup</h2>
+            <button (click)="tutorial.start('modal-recurring')" class="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all text-[10px] font-black border border-primary/20">?</button>
+          </div>
           <button (click)="close.emit()" class="w-10 h-10 bg-foreground/[0.05] rounded-2xl hover:bg-foreground/[0.1] text-foreground transition-all flex items-center justify-center border border-border">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
@@ -53,7 +57,8 @@ import { AccountPickerModalComponent } from '../accounts/account-picker-modal.co
               </div>
               <div>
                  <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Cycle Frequency</label>
-                 <select name="frequency" [(ngModel)]="model.frequency" class="input-premium w-full appearance-none cursor-pointer">
+                 <select name="frequency" [(ngModel)]="model.frequency" data-tutorial="select-frequency"
+                   class="input-premium w-full appearance-none cursor-pointer">
                     <option [value]="0">Daily</option>
                     <option [value]="1">Weekly</option>
                     <option [value]="2">Monthly</option>
@@ -66,6 +71,7 @@ import { AccountPickerModalComponent } from '../accounts/account-picker-modal.co
               <div>
                  <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Genesis Date</label>
                  <input type="date" name="startDate" [(ngModel)]="model.startDate" required
+                   data-tutorial="input-start-date"
                    class="input-premium w-full shadow-inner" style="color-scheme: light dark;">
               </div>
               <div>
@@ -136,6 +142,7 @@ export class CreateRecurringTransactionModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   
   private recurringService = inject(RecurringTransactionService);
+  protected tutorial = inject(TutorialService);
   protected categoryService = inject(CategoryService);
   protected accountService = inject(AccountService);
 

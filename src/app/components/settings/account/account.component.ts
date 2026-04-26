@@ -2,6 +2,7 @@ import { Component, inject, OnInit, ChangeDetectionStrategy, ChangeDetectorRef }
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
+import { TutorialService } from '../../../services/tutorial.service';
 import { UpdateUserRequestDto, UserDto } from '../../../models/transaction.dto';
 
 @Component({
@@ -13,9 +14,12 @@ import { UpdateUserRequestDto, UserDto } from '../../../models/transaction.dto';
     <div class="max-w-5xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 animate-fade-in pb-12">
       <!-- Meticulous Theme-Aware Sidebar -->
       <aside class="w-full lg:w-64 flex-shrink-0">
-        <div class="mb-6 px-1 lg:px-4">
-           <h1 class="text-xl md:text-2xl font-black text-foreground uppercase tracking-widest">Settings</h1>
-           <div class="h-1 w-6 bg-primary mt-2"></div>
+        <div class="mb-6 px-1 lg:px-4 flex items-center space-x-3">
+           <div>
+              <h1 class="text-xl md:text-2xl font-black text-foreground uppercase tracking-widest">Settings</h1>
+              <div class="h-1 w-6 bg-primary mt-2"></div>
+           </div>
+           <button (click)="tutorial.start()" class="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all text-[10px] font-black border border-primary/20">?</button>
         </div>
         <nav class="flex lg:flex-col bg-foreground/[0.03] lg:bg-transparent p-1 lg:p-0 rounded-2xl border border-border lg:border-none overflow-x-auto no-scrollbar gap-1">
           <button (click)="activeSection = 'profile'" 
@@ -40,7 +44,7 @@ import { UpdateUserRequestDto, UserDto } from '../../../models/transaction.dto';
       <!-- Main Config Surface -->
       <main class="flex-1" *ngIf="authService.currentUser() as user">
         @if (activeSection === 'profile') {
-          <div class="card space-y-8 md:space-y-10 animate-fade-in shadow-sm">
+          <div class="card space-y-8 md:space-y-10 animate-fade-in shadow-sm" data-tutorial="profile-card">
             <div class="flex flex-col md:flex-row items-center md:items-center space-y-6 md:space-y-0 md:space-x-10 pb-10 border-b border-border text-center md:text-left">
               <div class="relative group flex-shrink-0">
                 <div class="w-24 h-24 rounded-3xl bg-foreground/[0.03] border border-border p-1 shadow-inner overflow-hidden flex items-center justify-center relative">
@@ -113,6 +117,7 @@ import { UpdateUserRequestDto, UserDto } from '../../../models/transaction.dto';
 })
 export class AccountComponent implements OnInit {
   authService = inject(AuthService);
+  protected tutorial = inject(TutorialService);
   private cdr = inject(ChangeDetectorRef);
   
   activeSection = 'profile';

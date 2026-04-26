@@ -2,6 +2,7 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ThemeService, ThemeType } from '../../../services/theme.service';
+import { TutorialService } from '../../../services/tutorial.service';
 
 @Component({
   selector: 'app-preferences',
@@ -95,16 +96,38 @@ import { ThemeService, ThemeType } from '../../../services/theme.service';
           </div>
         </section>
 
-        <!-- Privacy & Visibility -->
-        <section class="card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 !py-10">
-           <div class="space-y-1">
-              <h2 class="text-sm font-black text-foreground uppercase tracking-tight">Privacy Obfuscation</h2>
-              <p class="text-[10px] font-bold text-subtle uppercase tracking-widest opacity-60">Blur all balance parameters on primary surfaces.</p>
+        <!-- Privacy & UI Elements -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+           <div class="card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 !py-10 shadow-sm">
+              <div class="space-y-1">
+                 <h2 class="text-sm font-black text-foreground uppercase tracking-tight">Privacy Obfuscation</h2>
+                 <p class="text-[10px] font-bold text-subtle uppercase tracking-widest opacity-60">Blur all balance parameters on primary surfaces.</p>
+              </div>
+              <button 
+                (click)="themeService.togglePrivacyMode()"
+                [class.bg-primary]="themeService.isPrivacyModeActive()"
+                class="w-14 h-7 bg-foreground/[0.1] border border-border rounded-full relative p-1 transition-all group overflow-hidden">
+                 <div 
+                   [class.translate-x-7]="themeService.isPrivacyModeActive()"
+                   class="w-5 h-5 bg-white border border-border rounded-full shadow-lg transition-transform duration-300"></div>
+                 <div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              </button>
            </div>
-           <button class="w-14 h-7 bg-foreground/[0.1] border border-border rounded-full relative p-1 transition-all group overflow-hidden">
-              <div class="w-5 h-5 bg-foreground/20 border border-border rounded-full shadow-lg transition-transform"></div>
-              <div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-           </button>
+
+           <div class="card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 !py-10 shadow-sm">
+              <div class="space-y-1">
+                 <h2 class="text-sm font-black text-foreground uppercase tracking-tight">Help Center Button</h2>
+                 <p class="text-[10px] font-bold text-subtle uppercase tracking-widest opacity-60">Toggle visibility of the floating tutorial FAB.</p>
+              </div>
+              <button 
+                (click)="tutorialService.toggleHelpButton(!tutorialService.helpButtonVisible())"
+                [class.bg-primary]="tutorialService.helpButtonVisible()"
+                class="w-14 h-7 bg-foreground/[0.1] border border-border rounded-full relative p-1 transition-all group overflow-hidden">
+                 <div 
+                   [class.translate-x-7]="tutorialService.helpButtonVisible()"
+                   class="w-5 h-5 bg-white border border-border rounded-full shadow-lg transition-transform duration-300"></div>
+              </button>
+           </div>
         </section>
 
         <!-- Regional Configuration -->
@@ -149,6 +172,7 @@ import { ThemeService, ThemeType } from '../../../services/theme.service';
 })
 export class PreferencesComponent {
   themeService = inject(ThemeService);
+  tutorialService = inject(TutorialService);
 
   setTheme(theme: ThemeType) {
     this.themeService.setTheme(theme);

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, inject, OnInit, ChangeDetectionStrateg
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TransactionService } from '../../services/transaction.service';
+import { TutorialService } from '../../services/tutorial.service';
 import { CreateTransactionRequestDto, TransactionTypeDto, CategoryDto, AccountDto } from '../../models/transaction.dto';
 import { CategoryPickerModalComponent } from './category-picker-modal.component';
 import { CategoryService } from '../../services/category.service';
@@ -18,7 +19,10 @@ import { AccountPickerModalComponent } from '../accounts/account-picker-modal.co
       <div class="card !p-0 w-full max-w-md overflow-hidden animate-slide-up border-border" (click)="$event.stopPropagation()">
         
         <div class="p-8 border-b border-border flex justify-between items-center bg-foreground/[0.02]">
-          <h2 class="text-xl font-black text-foreground uppercase tracking-tight">New Transaction</h2>
+          <div class="flex items-center space-x-3">
+            <h2 class="text-xl font-black text-foreground uppercase tracking-tight">New Transaction</h2>
+            <button (click)="tutorial.start('modal-transaction')" class="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all text-[10px] font-black border border-primary/20">?</button>
+          </div>
           <button (click)="close.emit()" class="w-10 h-10 bg-foreground/[0.05] rounded-2xl hover:bg-foreground/[0.1] text-foreground transition-all flex items-center justify-center border border-border">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
@@ -49,6 +53,7 @@ import { AccountPickerModalComponent } from '../accounts/account-picker-modal.co
               <div>
                  <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Amount</label>
                  <input type="number" name="amount" [(ngModel)]="model.amount" required min="0.01" step="0.01"
+                   data-tutorial="input-amount"
                    class="input-premium w-full text-xl font-black text-center shadow-inner">
               </div>
               <div>
@@ -62,6 +67,7 @@ import { AccountPickerModalComponent } from '../accounts/account-picker-modal.co
                <div>
                   <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Category</label>
                   <button type="button" (click)="!prefilledCategoryId && (isPickerOpen = true)" 
+                    data-tutorial="btn-category-picker"
                     [disabled]="prefilledCategoryId !== null"
                     class="w-full flex items-center justify-between bg-foreground/[0.03] border border-border rounded-xl px-4 py-4 text-left transition-all hover:bg-foreground/[0.05] shadow-inner group">
                     <div class="flex items-center space-x-2 min-w-0">
@@ -77,6 +83,7 @@ import { AccountPickerModalComponent } from '../accounts/account-picker-modal.co
                <div>
                   <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Source Account</label>
                   <button type="button" (click)="isAccountPickerOpen = true" 
+                    data-tutorial="btn-account-picker"
                     class="w-full flex items-center justify-between bg-foreground/[0.03] border border-border rounded-xl px-4 py-4 text-left transition-all hover:bg-foreground/[0.05] shadow-inner group">
                     <div class="flex items-center space-x-2 min-w-0">
                       @if (model.accountId) {
@@ -121,6 +128,7 @@ export class CreateTransactionModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   
   private transactionService = inject(TransactionService);
+  protected tutorial = inject(TutorialService);
   protected categoryService = inject(CategoryService);
   protected accountService = inject(AccountService);
 

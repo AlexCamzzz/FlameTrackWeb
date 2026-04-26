@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, inject, ChangeDetectionStrategy } from
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
+import { TutorialService } from '../../services/tutorial.service';
 import { AccountType } from '../../models/transaction.dto';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ACCOUNT_ICONS } from '../../models/constants';
@@ -16,7 +17,10 @@ import { ACCOUNT_ICONS } from '../../models/constants';
       <div class="card !p-0 w-full max-w-lg overflow-hidden animate-slide-up border-border" (click)="$event.stopPropagation()">
         
         <div class="p-6 md:p-8 border-b border-border flex justify-between items-center bg-foreground/[0.02]">
-          <h2 class="text-xl font-black text-foreground uppercase tracking-tight">New Account Source</h2>
+          <div class="flex items-center space-x-3">
+            <h2 class="text-xl font-black text-foreground uppercase tracking-tight">New Account Source</h2>
+            <button (click)="tutorial.start('modal-account')" class="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all text-[10px] font-black border border-primary/20">?</button>
+          </div>
           <button (click)="close.emit()" class="w-10 h-10 bg-foreground/[0.05] rounded-2xl hover:bg-foreground/[0.1] text-foreground transition-all flex items-center justify-center border border-border">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
@@ -27,6 +31,7 @@ import { ACCOUNT_ICONS } from '../../models/constants';
             <div>
               <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Account Label</label>
               <input type="text" name="name" [(ngModel)]="model.name" required placeholder="E.g. Primary Checking"
+                data-tutorial="input-account-name"
                 class="input-premium w-full shadow-inner">
             </div>
 
@@ -49,6 +54,7 @@ import { ACCOUNT_ICONS } from '../../models/constants';
                <div>
                   <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Initial Liquidity</label>
                   <input type="number" name="initialBalance" [(ngModel)]="model.initialBalance" required
+                    data-tutorial="input-initial-balance"
                     class="input-premium w-full font-black shadow-inner">
                </div>
                <div>
@@ -73,6 +79,7 @@ export class CreateAccountModalComponent {
   @Output() close = new EventEmitter<void>();
   
   private accountService = inject(AccountService);
+  protected tutorial = inject(TutorialService);
   private sanitizer = inject(DomSanitizer);
 
   isSaving = false;

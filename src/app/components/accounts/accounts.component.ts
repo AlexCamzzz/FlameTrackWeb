@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { AccountService } from '../../services/account.service';
+import { ThemeService } from '../../services/theme.service';
 import { CreateAccountModalComponent } from './create-account-modal.component';
 import { AccountDto } from '../../models/transaction.dto';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -18,7 +19,7 @@ import { ACCOUNT_ICONS } from '../../models/constants';
           <h1 class="text-xl md:text-2xl font-black text-foreground uppercase tracking-widest">Financial Sources</h1>
           <div class="h-1 w-8 bg-primary mt-2"></div>
         </div>
-        <button (click)="isModalOpen = true" class="btn-premium flex items-center space-x-2 w-full sm:w-auto">
+        <button (click)="isModalOpen = true" data-tutorial="btn-new-account" class="btn-premium flex items-center space-x-2 w-full sm:w-auto">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
           <span>New Account</span>
         </button>
@@ -49,7 +50,7 @@ import { ACCOUNT_ICONS } from '../../models/constants';
                 </div>
                 
                 <div class="flex items-baseline space-x-2">
-                   <span class="text-2xl font-black text-foreground tracking-tighter">{{ acc.balance | currency:acc.currency + ' ':'symbol':'1.0-0' }}</span>
+                   <span class="text-2xl font-black text-foreground tracking-tighter" [class.privacy-blur]="themeService.isPrivacyModeActive()">{{ acc.balance | currency:acc.currency + ' ':'symbol':'1.0-0' }}</span>
                    <span class="text-[9px] font-black text-subtle uppercase tracking-widest opacity-60">{{ acc.currency }}</span>
                 </div>
               </div>
@@ -73,6 +74,7 @@ import { ACCOUNT_ICONS } from '../../models/constants';
 })
 export class AccountsComponent implements OnInit {
   accountService = inject(AccountService);
+  protected themeService = inject(ThemeService);
   private sanitizer = inject(DomSanitizer);
   isModalOpen = false;
   isLoading = signal(true);

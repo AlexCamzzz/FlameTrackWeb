@@ -1,19 +1,32 @@
-import { Component, inject, HostListener, ElementRef, signal } from '@angular/core';
+import { Component, inject, HostListener, ElementRef, signal, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './services/auth.service';
 import { ThemeService } from './services/theme.service';
+import { TutorialService } from './services/tutorial.service';
 import { filter } from 'rxjs';
 import { TermsModalComponent } from './components/legal/terms-modal.component';
+import { TutorialOverlayComponent } from './components/tutorial/tutorial-overlay.component';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth } from '@ng-icons/heroicons/outline';
+import { heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, heroLifebuoy, heroEye, heroEyeSlash } from '@ng-icons/heroicons/outline';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TermsModalComponent, NgIconComponent],
-  providers: [provideIcons({ heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth })],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TermsModalComponent, TutorialOverlayComponent, NgIconComponent],
+  providers: [provideIcons({ heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, heroLifebuoy, heroEye, heroEyeSlash })],
   template: `
+    <app-tutorial-overlay />
+
+    <!-- Help FAB -->
+    <button *ngIf="authService.isAuthenticated() && tutorialService.helpButtonVisible() && !tutorialService.isActive()"
+      (click)="tutorialService.start()"
+      data-tutorial="help-fab"
+      class="fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-2xl z-[60] flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group">
+      <ng-icon name="heroLifebuoy" class="text-2xl group-hover:rotate-12 transition-transform"></ng-icon>
+      <span class="absolute right-full mr-4 px-3 py-1 bg-surface border border-border rounded-lg text-[10px] font-black uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">Help Center</span>
+    </button>
+
     <ng-container *ngIf="authService.isAuthenticated(); else unauthLayout">
       <div class="min-h-screen bg-background text-foreground flex flex-col font-sans transition-colors duration-300 overflow-x-hidden">
         
@@ -36,6 +49,11 @@ import { heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArro
           <!-- Desktop Navigation -->
           <nav class="hidden md:flex items-center bg-foreground/[0.03] p-1 rounded-2xl border border-border shadow-sm">
             <a *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive="bg-primary text-white shadow-lg shadow-primary/20" [routerLinkActiveOptions]="{exact: link.path === '/'}" 
+               [attr.data-tutorial]="
+                 link.path === '/accounts' ? 'nav-accounts-desktop' : 
+                 link.path === '/transactions' ? 'nav-ledger-desktop' : 
+                 link.path === '/budgets' ? 'nav-budgets-desktop' : 
+                 link.path === '/goals' ? 'nav-goals-desktop' : null"
                class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 text-subtle hover:text-foreground">
               {{ link.label }}
             </a>
@@ -43,6 +61,16 @@ import { heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArro
 
           <!-- Settings & Profile -->
           <div class="flex items-center space-x-2 md:space-x-4 relative settings-container" *ngIf="authService.currentUser() as user">
+            
+            <!-- Privacy Toggle Quick Action -->
+            <button (click)="themeService.togglePrivacyMode()" 
+              [class.text-primary]="themeService.isPrivacyModeActive()"
+              [class.text-subtle]="!themeService.isPrivacyModeActive()"
+              class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-foreground/[0.05] hover:bg-foreground/[0.08] transition-all flex items-center justify-center border border-border shadow-sm group"
+              [title]="themeService.isPrivacyModeActive() ? 'Disable Privacy Mode' : 'Enable Privacy Mode'">
+              <ng-icon [name]="themeService.isPrivacyModeActive() ? 'heroEyeSlash' : 'heroEye'" class="text-[1.2rem] md:text-[1.3rem]"></ng-icon>
+            </button>
+
             <!-- User Avatar Peek -->
             <div class="hidden sm:flex items-center space-x-3 px-3 py-1.5 bg-foreground/[0.03] border border-border rounded-2xl mr-1">
                <div class="w-7 h-7 rounded-lg overflow-hidden border border-border shadow-inner bg-foreground/[0.05] flex items-center justify-center">
@@ -86,6 +114,11 @@ import { heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArro
               </div>
               <a *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive="bg-primary text-white" [routerLinkActiveOptions]="{exact: link.path === '/'}" 
                  (click)="isMobileMenuOpen.set(false)"
+                 [attr.data-tutorial]="
+                   link.path === '/accounts' ? 'nav-accounts-mobile' : 
+                   link.path === '/transactions' ? 'nav-ledger-mobile' : 
+                   link.path === '/budgets' ? 'nav-budgets-mobile' : 
+                   link.path === '/goals' ? 'nav-goals-mobile' : null"
                  class="p-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all text-subtle hover:text-foreground flex items-center space-x-4 border border-transparent active:border-border">
                 <span>{{ link.label }}</span>
               </a>
@@ -106,9 +139,10 @@ import { heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArro
     </ng-template>
   `
 })
-export class App {
+export class App implements OnInit {
   authService = inject(AuthService);
   themeService = inject(ThemeService);
+  tutorialService = inject(TutorialService);
   private eRef = inject(ElementRef);
   private router = inject(Router);
 
@@ -142,6 +176,10 @@ export class App {
         this.router.isActive('/legal', true)
       );
     });
+  }
+
+  ngOnInit() {
+    // No auto-trigger
   }
 
   toggleDropdown(event: MouseEvent) {

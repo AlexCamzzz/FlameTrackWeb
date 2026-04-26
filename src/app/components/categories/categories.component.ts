@@ -2,6 +2,7 @@ import { Component, inject, OnInit, ChangeDetectionStrategy, signal } from '@ang
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryService } from '../../services/category.service';
+import { TutorialService } from '../../services/tutorial.service';
 import { CategoryDto } from '../../models/transaction.dto';
 
 @Component({
@@ -12,15 +13,16 @@ import { CategoryDto } from '../../models/transaction.dto';
   template: `
     <div class="max-w-4xl mx-auto space-y-8 animate-fade-in pb-12">
       <header class="flex justify-between items-end border-b border-border pb-6">
-        <div>
+        <div class="flex items-center space-x-3">
           <h1 class="text-2xl font-black text-foreground uppercase tracking-widest">Categories</h1>
+          <button (click)="tutorial.start()" class="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all text-[10px] font-black border border-primary/20">?</button>
           <div class="h-1 w-8 bg-primary mt-2"></div>
         </div>
       </header>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- List -->
-        <div class="space-y-4">
+        <div class="space-y-4" data-tutorial="category-list">
            <h2 class="text-[10px] font-black uppercase tracking-widest text-subtle ml-2">Active Classifications</h2>
            <div class="card !p-2 divide-y divide-border/20 shadow-sm">
               @for (cat of categoryService.categories(); track cat.id) {
@@ -44,7 +46,7 @@ import { CategoryDto } from '../../models/transaction.dto';
         </div>
 
         <!-- Create -->
-        <div class="space-y-4">
+        <div class="space-y-4" data-tutorial="category-create-form">
            <h2 class="text-[10px] font-black uppercase tracking-widest text-subtle ml-2">New Classification</h2>
            <div class="card !p-8 space-y-6 shadow-sm">
               <div>
@@ -71,6 +73,7 @@ import { CategoryDto } from '../../models/transaction.dto';
 })
 export class CategoriesComponent implements OnInit {
   categoryService = inject(CategoryService);
+  protected tutorial = inject(TutorialService);
   newName = '';
   newColor = '#FF5722';
   isSaving = false;

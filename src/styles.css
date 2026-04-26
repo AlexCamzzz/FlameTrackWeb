@@ -22,6 +22,21 @@
   --color-expense: #FF2D55;
 }
 
+/* Privacy Mode Base (Enables Unblur Animation) */
+.privacy-blur {
+  transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  filter: blur(0px);
+  opacity: 1;
+}
+
+/* Privacy Mode Active State */
+body[data-privacy="active"] .privacy-blur {
+  filter: blur(16px) !important;
+  user-select: none !important;
+  pointer-events: none !important;
+  opacity: 0.15 !important;
+}
+
 .theme-nord {
   --color-bg-app: #242933;
   --color-bg-card: #2E3440;

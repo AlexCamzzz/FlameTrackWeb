@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TransactionService } from '../../services/transaction.service';
 import { TransferService } from '../../services/transfer.service';
 import { AccountService } from '../../services/account.service';
+import { ThemeService } from '../../services/theme.service';
 import { CategoryService } from '../../services/category.service';
 import { RecurringTransactionService } from '../../services/recurring-transaction.service';
 import { TransactionTypeDto, AccountType, RecurrenceFrequency } from '../../models/transaction.dto';
@@ -27,7 +28,7 @@ import { CreateRecurringTransactionModalComponent } from './create-recurring-tra
           
           <div class="flex items-center space-x-3">
              @if (activeTab === 'transactions') {
-               <button (click)="isTransactionModalOpen = true" class="btn-premium flex-1 md:flex-none">
+               <button (click)="isTransactionModalOpen = true" data-tutorial="btn-new-transaction" class="btn-premium flex-1 md:flex-none">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
                   <span>Entry</span>
                </button>
@@ -56,6 +57,7 @@ import { CreateRecurringTransactionModalComponent } from './create-recurring-tra
                [class.text-subtle]="activeTab !== 'transfers'"
                class="px-4 md:px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all">Transfers</button>
              <button (click)="activeTab = 'recurring'" 
+               data-tutorial="tab-recurring"
                [class.bg-primary]="activeTab === 'recurring'" [class.text-white]="activeTab === 'recurring'"
                [class.text-subtle]="activeTab !== 'recurring'"
                class="px-4 md:px-6 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all">Recurring</button>
@@ -103,7 +105,7 @@ import { CreateRecurringTransactionModalComponent } from './create-recurring-tra
                           <span class="text-xs font-bold text-foreground/90 uppercase tracking-tight">{{ tx.description }}</span>
                         </div>
                       </td>
-                      <td class="py-5 px-8 font-black text-sm" [class.text-income-label]="tx.type === 0" [class.text-expense-label]="tx.type === 1">
+                      <td class="py-5 px-8 font-black text-sm" [class.text-income-label]="tx.type === 0" [class.text-expense-label]="tx.type === 1" [class.privacy-blur]="themeService.isPrivacyModeActive()">
                         {{ tx.type === 0 ? '+' : '-' }}{{ tx.amount | currency:'MXN ' }}
                       </td>
                       <td class="py-5 px-8">
@@ -153,7 +155,7 @@ import { CreateRecurringTransactionModalComponent } from './create-recurring-tra
                        </div>
                     </div>
                     <div class="text-right">
-                       <p class="text-sm font-black tracking-tighter" [class.text-income-label]="tx.type === 0" [class.text-expense-label]="tx.type === 1">
+                       <p class="text-sm font-black tracking-tighter" [class.text-income-label]="tx.type === 0" [class.text-expense-label]="tx.type === 1" [class.privacy-blur]="themeService.isPrivacyModeActive()">
                           {{ tx.type === 0 ? '+' : '-' }}{{ tx.amount | currency:'MXN ':'symbol':'1.0-0' }}
                        </p>
                     </div>
@@ -187,7 +189,7 @@ import { CreateRecurringTransactionModalComponent } from './create-recurring-tra
                        </div>
                     </div>
                     <div class="text-center md:text-right flex-shrink-0">
-                       <p class="text-xl font-black text-foreground tracking-tighter">{{ trf.amount | currency:'MXN ' }}</p>
+                       <p class="text-xl font-black text-foreground tracking-tighter" [class.privacy-blur]="themeService.isPrivacyModeActive()">{{ trf.amount | currency:'MXN ' }}</p>
                        <p class="text-[9px] font-black text-subtle uppercase opacity-60">{{ trf.date | date:'dd MMM, yyyy' }}</p>
                     </div>
                  </div>
@@ -217,7 +219,7 @@ import { CreateRecurringTransactionModalComponent } from './create-recurring-tra
                              <span class="px-2 py-1 bg-foreground/[0.05] border border-border rounded-lg text-[8px] font-black uppercase tracking-widest text-subtle shadow-inner">
                                 {{ getFrequencyName(rec.frequency) }}
                              </span>
-                             <p class="text-xl font-black text-foreground tracking-tighter mt-2">{{ rec.amount | currency:'MXN ' }}</p>
+                             <p class="text-xl font-black text-foreground tracking-tighter mt-2" [class.privacy-blur]="themeService.isPrivacyModeActive()">{{ rec.amount | currency:'MXN ' }}</p>
                           </div>
                        </div>
                        <div class="space-y-1">
@@ -266,6 +268,7 @@ export class TransactionsComponent implements OnInit {
   protected transactionService = inject(TransactionService);
   protected transferService = inject(TransferService);
   protected accountService = inject(AccountService);
+  protected themeService = inject(ThemeService);
   protected categoryService = inject(CategoryService);
   protected recurringService = inject(RecurringTransactionService);
 

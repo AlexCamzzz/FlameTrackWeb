@@ -42,7 +42,7 @@ import { ACCOUNT_ICONS } from '../../models/constants';
                 </div>
                 <span class="text-[9px] font-black text-subtle uppercase tracking-[0.3em] mt-2">Inflow</span>
               </div>
-              <h3 class="text-3xl font-black text-foreground tracking-tighter">{{ summary.monthlyIncome | currency:'MXN ':'symbol':'1.0-0' }}</h3>
+              <h3 class="text-3xl font-black text-foreground tracking-tighter privacy-blur">{{ summary.monthlyIncome | currency:'MXN ':'symbol':'1.0-0' }}</h3>
             </div>
           </div>
 
@@ -54,11 +54,11 @@ import { ACCOUNT_ICONS } from '../../models/constants';
                 </div>
                 <span class="text-[9px] font-black text-subtle uppercase tracking-[0.3em] mt-2">Outflow</span>
               </div>
-              <h3 class="text-3xl font-black text-foreground tracking-tighter">{{ summary.monthlyExpenses | currency:'MXN ':'symbol':'1.0-0' }}</h3>
+              <h3 class="text-3xl font-black text-foreground tracking-tighter privacy-blur">{{ summary.monthlyExpenses | currency:'MXN ':'symbol':'1.0-0' }}</h3>
             </div>
           </div>
 
-          <div class="card !p-8 border-primary/20 transition-all hover:border-primary/40 group relative overflow-hidden bg-primary/[0.01]">
+          <div data-tutorial="dashboard-summary" class="card !p-8 border-primary/20 transition-all hover:border-primary/40 group relative overflow-hidden bg-primary/[0.01]">
             <div class="flex flex-col h-full justify-between space-y-6 relative z-10">
               <div class="flex justify-between items-start">
                 <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner border border-border">
@@ -66,7 +66,7 @@ import { ACCOUNT_ICONS } from '../../models/constants';
                 </div>
                 <span class="text-[10px] font-black text-primary uppercase tracking-[0.3em] mt-2">Net Worth</span>
               </div>
-              <h3 class="text-4xl font-black text-foreground tracking-tighter">{{ summary.totalBalance | currency:'MXN ':'symbol':'1.0-0' }}</h3>
+              <h3 class="text-4xl font-black text-foreground tracking-tighter privacy-blur">{{ summary.totalBalance | currency:'MXN ':'symbol':'1.0-0' }}</h3>
             </div>
           </div>
 
@@ -103,7 +103,7 @@ import { ACCOUNT_ICONS } from '../../models/constants';
                        </div>
                        <span class="text-xs font-black text-foreground truncate uppercase tracking-tight">{{ acc.name }}</span>
                     </div>
-                    <span class="text-xs font-black text-foreground">{{ acc.balance | currency:acc.currency + ' ':'symbol':'1.0-0' }}</span>
+                    <span class="text-xs font-black text-foreground privacy-blur">{{ acc.balance | currency:acc.currency + ' ':'symbol':'1.0-0' }}</span>
                   </div>
                 }
               </div>
@@ -123,11 +123,11 @@ import { ACCOUNT_ICONS } from '../../models/constants';
                     </div>
                     <div class="flex justify-between items-center px-1">
                        <div class="flex items-baseline space-x-1">
-                          <span class="text-[10px] font-black text-foreground tracking-tight">{{ goal.currentAmount | currency:'MXN ':'symbol':'1.0-0' }}</span>
+                          <span class="text-[10px] font-black text-foreground tracking-tight privacy-blur">{{ goal.currentAmount | currency:'MXN ':'symbol':'1.0-0' }}</span>
                           <span class="text-[8px] font-black text-subtle uppercase opacity-50">Saved</span>
                        </div>
                        <div class="flex items-baseline space-x-1">
-                          <span class="text-[10px] font-black text-foreground/40 tracking-tight">{{ goal.targetAmount | currency:'MXN ':'symbol':'1.0-0' }}</span>
+                          <span class="text-[10px] font-black text-foreground/40 tracking-tight privacy-blur">{{ goal.targetAmount | currency:'MXN ':'symbol':'1.0-0' }}</span>
                           <span class="text-[8px] font-black text-subtle uppercase opacity-40">Goal</span>
                        </div>
                     </div>
@@ -159,7 +159,7 @@ import { ACCOUNT_ICONS } from '../../models/constants';
                         </div>
                       </div>
                       <div class="text-right ml-6">
-                        <p class="text-lg font-black tracking-tighter" [class.text-income-label]="tx.type === 0" [class.text-expense-label]="tx.type === 1">
+                        <p class="text-lg font-black tracking-tighter privacy-blur" [class.text-income-label]="tx.type === 0" [class.text-expense-label]="tx.type === 1">
                           {{ tx.type === 0 ? '+' : '-' }}{{ tx.amount | currency:'MXN ':'symbol':'1.0-0' }}
                         </p>
                       </div>
@@ -187,11 +187,11 @@ import { ACCOUNT_ICONS } from '../../models/constants';
                         <div class="flex justify-between mt-4">
                            <div class="space-y-0.5">
                               <p class="text-[8px] font-black text-subtle uppercase tracking-tighter opacity-40">Consumed</p>
-                              <p class="text-[11px] font-black text-foreground">{{ budget.spent | currency:'MXN ':'symbol':'1.0-0' }}</p>
+                              <p class="text-[11px] font-black text-foreground privacy-blur">{{ budget.spent | currency:'MXN ':'symbol':'1.0-0' }}</p>
                            </div>
                            <div class="text-right space-y-0.5">
                               <p class="text-[8px] font-black text-subtle uppercase tracking-tighter opacity-40">Limit</p>
-                              <p class="text-[11px] font-black text-foreground/50">{{ budget.limit | currency:'MXN ':'symbol':'1.0-0' }}</p>
+                              <p class="text-[11px] font-black text-foreground/50 privacy-blur">{{ budget.limit | currency:'MXN ':'symbol':'1.0-0' }}</p>
                            </div>
                         </div>
                      </div>
