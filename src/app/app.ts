@@ -8,13 +8,23 @@ import { filter } from 'rxjs';
 import { TermsModalComponent } from './components/legal/terms-modal.component';
 import { TutorialOverlayComponent } from './components/tutorial/tutorial-overlay.component';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, heroLifebuoy, heroEye, heroEyeSlash } from '@ng-icons/heroicons/outline';
+import { 
+  heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, 
+  heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, 
+  heroLifebuoy, heroEye, heroEyeSlash, heroHome, heroCreditCard, 
+  heroArrowsRightLeft, heroChartPie, heroTrophy 
+} from '@ng-icons/heroicons/outline';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TermsModalComponent, TutorialOverlayComponent, NgIconComponent],
-  providers: [provideIcons({ heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, heroLifebuoy, heroEye, heroEyeSlash })],
+  providers: [provideIcons({ 
+    heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, 
+    heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, 
+    heroLifebuoy, heroEye, heroEyeSlash, heroHome, heroCreditCard, 
+    heroArrowsRightLeft, heroChartPie, heroTrophy 
+  })],
   template: `
     <app-tutorial-overlay />
 
@@ -22,25 +32,19 @@ import { heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArro
     <button *ngIf="authService.isAuthenticated() && tutorialService.helpButtonVisible() && !tutorialService.isActive()"
       (click)="tutorialService.start()"
       data-tutorial="help-fab"
-      class="fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-2xl z-[60] flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group">
-      <ng-icon name="heroLifebuoy" class="text-2xl group-hover:rotate-12 transition-transform"></ng-icon>
-      <span class="absolute right-full mr-4 px-3 py-1 bg-surface border border-border rounded-lg text-[10px] font-black uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">Help Center</span>
+      class="fixed bottom-24 md:bottom-6 right-6 w-12 h-12 md:w-14 md:h-14 bg-primary text-white rounded-full shadow-2xl z-[60] flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group">
+      <ng-icon name="heroLifebuoy" class="text-xl md:text-2xl group-hover:rotate-12 transition-transform"></ng-icon>
     </button>
 
     <ng-container *ngIf="authService.isAuthenticated(); else unauthLayout">
       <div class="min-h-screen bg-background text-foreground flex flex-col font-sans transition-colors duration-300 overflow-x-hidden">
         
         <app-terms-modal *ngIf="authService.currentUser() && !authService.currentUser()?.hasAcceptedTerms"></app-terms-modal>
-        <!-- Responsive Header -->
+        
+        <!-- Header -->
         <header class="h-16 md:h-20 bg-surface/80 backdrop-blur-2xl border-b border-border flex items-center justify-between px-4 md:px-10 sticky top-0 z-50 transition-colors">
-          
-          <!-- Logo & Mobile Toggle -->
           <div class="flex items-center space-x-3 md:space-x-4">
-            <button (click)="isMobileMenuOpen.set(!isMobileMenuOpen())" class="md:hidden p-2 text-subtle hover:text-foreground">
-               <ng-icon name="heroBars3" *ngIf="!isMobileMenuOpen()" class="text-2xl"></ng-icon>
-               <ng-icon name="heroXMark" *ngIf="isMobileMenuOpen()" class="text-2xl"></ng-icon>
-            </button>
-            <a routerLink="/" (click)="isMobileMenuOpen.set(false)" class="flex items-center space-x-2 md:space-x-3 hover:opacity-80 transition-opacity cursor-pointer">
+            <a routerLink="/" class="flex items-center space-x-2 md:space-x-3 hover:opacity-80 transition-opacity cursor-pointer">
               <img [src]="themeService.currentLogo()" alt="FlameTrack" class="w-8 h-8 md:w-10 md:h-10 object-contain drop-shadow-2xl">
               <span class="text-lg md:text-2xl font-black tracking-tighter text-foreground hidden xs:block">FlameTrack</span>
             </a>
@@ -59,19 +63,14 @@ import { heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArro
             </a>
           </nav>
 
-          <!-- Settings & Profile -->
           <div class="flex items-center space-x-2 md:space-x-4 relative settings-container" *ngIf="authService.currentUser() as user">
-            
-            <!-- Privacy Toggle Quick Action -->
             <button (click)="themeService.togglePrivacyMode()" 
               [class.text-primary]="themeService.isPrivacyModeActive()"
               [class.text-subtle]="!themeService.isPrivacyModeActive()"
-              class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-foreground/[0.05] hover:bg-foreground/[0.08] transition-all flex items-center justify-center border border-border shadow-sm group"
-              [title]="themeService.isPrivacyModeActive() ? 'Disable Privacy Mode' : 'Enable Privacy Mode'">
+              class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-foreground/[0.05] hover:bg-foreground/[0.08] transition-all flex items-center justify-center border border-border shadow-sm group">
               <ng-icon [name]="themeService.isPrivacyModeActive() ? 'heroEyeSlash' : 'heroEye'" class="text-[1.2rem] md:text-[1.3rem]"></ng-icon>
             </button>
 
-            <!-- User Avatar Peek -->
             <div class="hidden sm:flex items-center space-x-3 px-3 py-1.5 bg-foreground/[0.03] border border-border rounded-2xl mr-1">
                <div class="w-7 h-7 rounded-lg overflow-hidden border border-border shadow-inner bg-foreground/[0.05] flex items-center justify-center">
                   <img *ngIf="user.avatar" [src]="user.avatar" class="w-full h-full object-cover">
@@ -104,29 +103,18 @@ import { heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, heroArro
           </div>
         </header>
 
-        <!-- Mobile Drawer Navigation -->
-        <div *ngIf="isMobileMenuOpen()" class="fixed inset-0 z-40 md:hidden animate-fade-in">
-           <div class="absolute inset-0 bg-background/80 backdrop-blur-md" (click)="isMobileMenuOpen.set(false)"></div>
-           <nav class="absolute left-0 top-0 bottom-0 w-72 bg-surface border-r border-border p-8 flex flex-col space-y-2 animate-slide-up shadow-2xl">
-              <div class="mb-10 flex items-center space-x-3">
-                <img [src]="themeService.currentLogo()" class="w-8 h-8 object-contain">
-                <span class="text-xl font-black text-foreground">Menu</span>
-              </div>
-              <a *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive="bg-primary text-white" [routerLinkActiveOptions]="{exact: link.path === '/'}" 
-                 (click)="isMobileMenuOpen.set(false)"
-                 [attr.data-tutorial]="
-                   link.path === '/accounts' ? 'nav-accounts-mobile' : 
-                   link.path === '/transactions' ? 'nav-ledger-mobile' : 
-                   link.path === '/budgets' ? 'nav-budgets-mobile' : 
-                   link.path === '/goals' ? 'nav-goals-mobile' : null"
-                 class="p-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all text-subtle hover:text-foreground flex items-center space-x-4 border border-transparent active:border-border">
-                <span>{{ link.label }}</span>
-              </a>
-           </nav>
-        </div>
+        <!-- Mobile Bottom Tab Bar -->
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-surface/90 backdrop-blur-xl border-t border-border flex items-center justify-around px-2 z-[50]">
+          <a *ngFor="let link of mobileNavLinks" [routerLink]="link.path" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: link.path === '/'}"
+             [attr.data-tutorial]="link.tutorialKey"
+             class="flex flex-col items-center justify-center space-y-1.5 w-16 transition-all active:scale-90 text-subtle">
+             <ng-icon [name]="link.icon" class="text-xl"></ng-icon>
+             <span class="text-[8px] font-black uppercase tracking-tighter">{{ link.label }}</span>
+          </a>
+        </nav>
 
-        <!-- Main Content (Adaptive Padding) -->
-        <main class="flex-1 overflow-auto p-4 md:p-10 transition-colors duration-300">
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto p-4 md:p-10 transition-colors duration-300 pb-24 md:pb-10">
           <div class="max-w-[1400px] mx-auto">
             <router-outlet />
           </div>
@@ -148,7 +136,6 @@ export class App implements OnInit {
 
   isDropdownOpen = false;
   isSettingsActive = signal(false);
-  isMobileMenuOpen = signal(false);
 
   navLinks = [
     { path: '/', label: 'Dashboard' },
@@ -156,6 +143,14 @@ export class App implements OnInit {
     { path: '/accounts', label: 'Accounts' },
     { path: '/budgets', label: 'Budgets' },
     { path: '/goals', label: 'Goals' }
+  ];
+
+  mobileNavLinks = [
+    { path: '/', label: 'Home', icon: 'heroHome', tutorialKey: 'nav-home-mobile' },
+    { path: '/transactions', label: 'Ledger', icon: 'heroArrowsRightLeft', tutorialKey: 'nav-ledger-mobile' },
+    { path: '/accounts', label: 'Vaults', icon: 'heroCreditCard', tutorialKey: 'nav-accounts-mobile' },
+    { path: '/budgets', label: 'Budgets', icon: 'heroChartPie', tutorialKey: 'nav-budgets-mobile' },
+    { path: '/goals', label: 'Targets', icon: 'heroTrophy', tutorialKey: 'nav-goals-mobile' }
   ];
 
   settingsLinks = [
@@ -178,9 +173,7 @@ export class App implements OnInit {
     });
   }
 
-  ngOnInit() {
-    // No auto-trigger
-  }
+  ngOnInit() {}
 
   toggleDropdown(event: MouseEvent) {
     event.stopPropagation();
