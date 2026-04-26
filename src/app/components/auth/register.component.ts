@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-register',
@@ -14,7 +15,7 @@ import { AuthService } from '../../services/auth.service';
       <div class="w-full max-w-md space-y-10">
         <!-- Brand Identity -->
         <div class="text-center space-y-4">
-          <img src="/assets/logo.png" alt="FlameTrack" class="w-16 h-16 mx-auto drop-shadow-2xl">
+          <img [src]="themeService.currentLogo()" alt="FlameTrack" class="w-16 h-16 mx-auto drop-shadow-2xl">
           <div>
             <h1 class="text-3xl font-black text-foreground uppercase tracking-tighter">Forge Account</h1>
             <p class="text-subtle text-[10px] font-black uppercase tracking-[0.4em] opacity-60">Join the Financial Elite</p>
@@ -72,6 +73,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class RegisterComponent {
   authService = inject(AuthService);
+  themeService = inject(ThemeService);
   private router = inject(Router);
 
   isSubmitting = false;

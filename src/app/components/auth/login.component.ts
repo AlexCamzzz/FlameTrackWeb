@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-login',
@@ -16,9 +17,7 @@ import { AuthService } from '../../services/auth.service';
 
       <div class="w-full max-w-md p-8 bg-surface/80 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl relative z-10">
         <div class="flex justify-center mb-8">
-          <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30">
-            <span class="font-bold text-2xl text-white">FT</span>
-          </div>
+           <img [src]="themeService.currentLogo()" alt="FlameTrack" class="w-20 h-20 object-contain drop-shadow-2xl">
         </div>
 
         <h2 class="text-3xl font-bold text-center mb-2 text-white">Welcome back</h2>
@@ -58,7 +57,8 @@ import { AuthService } from '../../services/auth.service';
   `
 })
 export class LoginComponent {
-  private authService = inject(AuthService);
+  authService = inject(AuthService);
+  themeService = inject(ThemeService);
   
   isSubmitting = false;
   errorMessage = '';

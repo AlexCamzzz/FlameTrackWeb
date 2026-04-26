@@ -1,4 +1,4 @@
-import { Injectable, signal, inject, PLATFORM_ID, RendererFactory2 } from '@angular/core';
+import { Injectable, signal, computed, inject, PLATFORM_ID, RendererFactory2 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 export type ThemeType = 'default-dark' | 'theme-nord' | 'theme-deep-midnight' | 'theme-sakura' | 'theme-forest' | 'theme-pride';
@@ -13,6 +13,23 @@ export class ThemeService {
 
   private currentThemeSignal = signal<ThemeType>('default-dark');
   currentTheme = this.currentThemeSignal.asReadonly();
+
+  currentLogo = computed(() => {
+    switch (this.currentThemeSignal()) {
+      case 'theme-nord':
+        return '/assets/Blue FT.svg';
+      case 'theme-deep-midnight':
+        return '/assets/Red FT.svg';
+      case 'theme-sakura':
+        return '/assets/Pink FT.svg';
+      case 'theme-forest':
+        return '/assets/Green FT.svg';
+      case 'theme-pride':
+        return '/assets/Rainbow FT.svg';
+      default:
+        return '/assets/Orange FT.svg';
+    }
+  });
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {

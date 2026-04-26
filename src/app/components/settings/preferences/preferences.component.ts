@@ -26,74 +26,70 @@ import { ThemeService, ThemeType } from '../../../services/theme.service';
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
              <!-- Default -->
              <div (click)="setTheme('default-dark')" 
-               [class.border-primary]="themeService.currentTheme() === 'default-dark'"
-               [class.border-border]="themeService.currentTheme() !== 'default-dark'"
-               class="p-6 bg-[#0F0E13] border-2 rounded-3xl cursor-pointer transition-all hover:border-primary/50 group shadow-sm">
-                <div class="w-full h-16 bg-[#1A191F] rounded-xl mb-4 border border-white/5 shadow-inner"></div>
+               [ngClass]="themeService.currentTheme() === 'default-dark' ? 'border-[#FF5722]' : 'border-[#FFFFFF0D]'"
+               class="p-6 bg-[#0A0A0A] border-2 rounded-3xl cursor-pointer transition-all hover:border-[#FF5722] group shadow-sm">
+                <div class="w-full h-16 bg-[#141414] rounded-xl mb-4 border border-[#FFFFFF0D] shadow-inner"></div>
                 <div class="flex justify-between items-center">
-                   <span class="text-[10px] font-black uppercase tracking-widest text-white">Flame Orange</span>
-                   <div *ngIf="themeService.currentTheme() === 'default-dark'" class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)]"></div>
+                   <span class="text-[10px] font-black uppercase tracking-widest text-[#FFFFFF]">Flame Orange</span>
+                   <div *ngIf="themeService.currentTheme() === 'default-dark'" class="w-2 h-2 rounded-full bg-[#FF5722] shadow-[0_0_8px_#FF5722]"></div>
                 </div>
              </div>
 
              <!-- Nord -->
              <div (click)="setTheme('theme-nord')"
-               [class.border-primary]="themeService.currentTheme() === 'theme-nord'"
-               [class.border-border]="themeService.currentTheme() !== 'theme-nord'"
-               class="p-6 bg-[#2E3440] border-2 rounded-3xl cursor-pointer transition-all hover:border-primary/50 group shadow-sm">
-                <div class="w-full h-16 bg-[#3B4252] rounded-xl mb-4 border border-white/5 shadow-inner"></div>
+               [ngClass]="themeService.currentTheme() === 'theme-nord' ? 'border-[#88C0D0]' : 'border-[#88C0D01A]'"
+               class="p-6 bg-[#242933] border-2 rounded-3xl cursor-pointer transition-all hover:border-[#88C0D0] group shadow-sm">
+                <div class="w-full h-16 bg-[#2E3440] rounded-xl mb-4 border border-[#88C0D01A] shadow-inner"></div>
                 <div class="flex justify-between items-center">
                    <span class="text-[10px] font-black uppercase tracking-widest text-[#ECEFF4]">Nord Arctic</span>
-                   <div *ngIf="themeService.currentTheme() === 'theme-nord'" class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#88C0D0]"></div>
+                   <div *ngIf="themeService.currentTheme() === 'theme-nord'" class="w-2 h-2 rounded-full bg-[#88C0D0] shadow-[0_0_8px_#88C0D0]"></div>
                 </div>
              </div>
 
              <!-- Midnight -->
              <div (click)="setTheme('theme-deep-midnight')"
-               [class.border-primary]="themeService.currentTheme() === 'theme-deep-midnight'"
-               [class.border-border]="themeService.currentTheme() !== 'theme-deep-midnight'"
-               class="p-6 bg-[#050505] border-2 rounded-3xl cursor-pointer transition-all hover:border-primary/50 group shadow-sm">
-                <div class="w-full h-16 bg-[#0F111A] rounded-xl mb-4 border border-white/5 shadow-inner"></div>
+               [ngClass]="themeService.currentTheme() === 'theme-deep-midnight' ? 'border-[#BB86FC]' : 'border-[#FFFFFF0A]'"
+               class="p-6 bg-[#000000] border-2 rounded-3xl cursor-pointer transition-all hover:border-[#BB86FC] group shadow-sm">
+                <div class="w-full h-16 bg-[#0D0D0D] rounded-xl mb-4 border border-[#FFFFFF0A] shadow-inner"></div>
                 <div class="flex justify-between items-center">
-                   <span class="text-[10px] font-black uppercase tracking-widest text-white">Deep Midnight</span>
-                   <div *ngIf="themeService.currentTheme() === 'theme-deep-midnight'" class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#7C4DFF]"></div>
+                   <span class="text-[10px] font-black uppercase tracking-widest text-[#FFFFFF]">Deep Midnight</span>
+                   <div *ngIf="themeService.currentTheme() === 'theme-deep-midnight'" class="w-2 h-2 rounded-full bg-[#BB86FC] shadow-[0_0_8px_#BB86FC]"></div>
                 </div>
              </div>
 
              <!-- Sakura -->
              <div (click)="setTheme('theme-sakura')"
-               [class.border-primary]="themeService.currentTheme() === 'theme-sakura'"
-               [class.border-border]="themeService.currentTheme() !== 'theme-sakura'"
-               class="p-6 bg-[#1C191D] border-2 rounded-3xl cursor-pointer transition-all hover:border-primary/50 group shadow-sm">
-                <div class="w-full h-16 bg-[#252026] rounded-xl mb-4 border border-pink-500/10 shadow-inner"></div>
+               [style.borderColor]="themeService.currentTheme() === 'theme-sakura' ? '#D81B60' : '#BEA0B6'"
+               class="p-6 border-2 rounded-3xl cursor-pointer transition-all hover:!border-[#D81B60] group shadow-sm"
+               style="background-color: #D4BACC;">
+                <div class="w-full h-16 rounded-xl mb-4 border shadow-inner" style="background-color: #E3C9DB; border-color: #BEA0B6;"></div>
                 <div class="flex justify-between items-center">
-                   <span class="text-[10px] font-black uppercase tracking-widest text-[#FCE4EC]">Sakura Blossom</span>
-                   <div *ngIf="themeService.currentTheme() === 'theme-sakura'" class="w-2 h-2 rounded-full bg-[#F06292] shadow-[0_0_8px_#F06292]"></div>
+                   <span class="text-[10px] font-black uppercase tracking-widest" style="color: #2B1626;">Sakura Blossom</span>
+                   <div *ngIf="themeService.currentTheme() === 'theme-sakura'" class="w-2 h-2 rounded-full shadow-[0_0_8px_#D81B60]" style="background-color: #D81B60;"></div>
                 </div>
              </div>
 
              <!-- Forest -->
              <div (click)="setTheme('theme-forest')"
-               [class.border-primary]="themeService.currentTheme() === 'theme-forest'"
-               [class.border-border]="themeService.currentTheme() !== 'theme-forest'"
-               class="p-6 bg-[#0B100E] border-2 rounded-3xl cursor-pointer transition-all hover:border-primary/50 group shadow-sm">
-                <div class="w-full h-16 bg-[#141C19] rounded-xl mb-4 border border-green-500/10 shadow-inner"></div>
+               [style.borderColor]="themeService.currentTheme() === 'theme-forest' ? '#2E7D32' : '#869C8B'"
+               class="p-6 border-2 rounded-3xl cursor-pointer transition-all hover:!border-[#2E7D32] group shadow-sm"
+               style="background-color: #97AD9C;">
+                <div class="w-full h-16 rounded-xl mb-4 border shadow-inner" style="background-color: #A5BBAA; border-color: #869C8B;"></div>
                 <div class="flex justify-between items-center">
-                   <span class="text-[10px] font-black uppercase tracking-widest text-[#E8F5E9]">Forest Obsidian</span>
-                   <div *ngIf="themeService.currentTheme() === 'theme-forest'" class="w-2 h-2 rounded-full bg-[#4CAF50] shadow-[0_0_8px_#4CAF50]"></div>
+                   <span class="text-[10px] font-black uppercase tracking-widest" style="color: #1B261D;">Forest Canopy</span>
+                   <div *ngIf="themeService.currentTheme() === 'theme-forest'" class="w-2 h-2 rounded-full shadow-[0_0_8px_#2E7D32]" style="background-color: #2E7D32;"></div>
                 </div>
              </div>
 
              <!-- Pride -->
              <div (click)="setTheme('theme-pride')"
-               [class.border-white/40]="themeService.currentTheme() === 'theme-pride'"
-               [class.border-border]="themeService.currentTheme() !== 'theme-pride'"
-               class="p-6 bg-[#0F0E13] border-2 rounded-3xl cursor-pointer transition-all hover:border-white/50 group shadow-sm overflow-hidden relative">
+               [ngClass]="themeService.currentTheme() === 'theme-pride' ? 'border-[#FFFFFF66]' : 'border-[#D1C4E91A]'"
+               class="p-6 bg-[#09070D] border-2 rounded-3xl cursor-pointer transition-all hover:border-[#FFFFFF66] group shadow-sm overflow-hidden relative">
                 <div class="absolute inset-0 opacity-10 bg-gradient-to-br from-red-500 via-green-500 to-purple-600"></div>
                 <div class="w-full h-16 bg-gradient-to-r from-red-500 via-yellow-400 via-green-500 via-blue-500 to-purple-600 rounded-xl mb-4 shadow-lg relative z-10"></div>
                 <div class="flex justify-between items-center relative z-10">
-                   <span class="text-[10px] font-black uppercase tracking-widest text-white">Pride Aurora</span>
-                   <div *ngIf="themeService.currentTheme() === 'theme-pride'" class="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_10px_white]"></div>
+                   <span class="text-[10px] font-black uppercase tracking-widest text-[#FFFFFF]">Pride Aurora</span>
+                   <div *ngIf="themeService.currentTheme() === 'theme-pride'" class="w-2.5 h-2.5 rounded-full bg-[#FFFFFF] shadow-[0_0_10px_#FFFFFF]"></div>
                 </div>
              </div>
           </div>
