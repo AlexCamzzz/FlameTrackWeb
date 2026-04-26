@@ -1,16 +1,28 @@
 {
   "name": "FlameTrack",
   "short_name": "FlameTrack",
-  "theme_color": "#0F0E13",
-  "background_color": "#0F0E13",
+  "theme_color": "#0A0A0A",
+  "background_color": "#0A0A0A",
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
   "icons": [
     {
-      "src": "assets/logo.png",
+      "src": "assets/Orange FT.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/Orange FT.svg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/Orange FT.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ]
