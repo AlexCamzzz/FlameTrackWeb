@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from './services/auth.service';
 import { ThemeService } from './services/theme.service';
 import { TutorialService } from './services/tutorial.service';
+import { BudgetService } from './services/budget.service';
+import { AccountService } from './services/account.service';
+import { TransactionService } from './services/transaction.service';
 import { filter } from 'rxjs';
 import { TermsModalComponent } from './components/legal/terms-modal.component';
 import { TutorialOverlayComponent } from './components/tutorial/tutorial-overlay.component';
@@ -41,7 +44,6 @@ import {
         
         <app-terms-modal *ngIf="authService.currentUser() && !authService.currentUser()?.hasAcceptedTerms"></app-terms-modal>
         
-        <!-- Header -->
         <header class="h-16 md:h-20 bg-surface/80 backdrop-blur-2xl border-b border-border flex items-center justify-between px-4 md:px-10 sticky top-0 z-50 transition-colors">
           <div class="flex items-center space-x-3 md:space-x-4">
             <a routerLink="/" class="flex items-center space-x-2 md:space-x-3 hover:opacity-80 transition-opacity cursor-pointer">
@@ -50,7 +52,6 @@ import {
             </a>
           </div>
 
-          <!-- Desktop Navigation -->
           <nav class="hidden md:flex items-center bg-foreground/[0.03] p-1 rounded-2xl border border-border shadow-sm">
             <a *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive="bg-primary text-white shadow-lg shadow-primary/20" [routerLinkActiveOptions]="{exact: link.path === '/'}" 
                [attr.data-tutorial]="
@@ -86,7 +87,6 @@ import {
               <ng-icon name="heroCog8Tooth" class="text-[1.25rem] md:text-[1.5rem] transition-transform group-hover:rotate-45"></ng-icon>
             </button>
 
-            <!-- Settings Menu -->
             <div *ngIf="isDropdownOpen" class="absolute top-[calc(100%+12px)] right-0 w-64 bg-surface border border-border rounded-[2rem] shadow-2xl overflow-hidden z-[100] animate-slide-up">
               <div class="p-3 space-y-1">
                 <a *ngFor="let item of settingsLinks" [routerLink]="item.path" (click)="isDropdownOpen = false" class="w-full flex items-center space-x-3 p-4 rounded-2xl hover:bg-foreground/[0.05] transition-all text-subtle hover:text-foreground text-xs font-black uppercase tracking-widest">
@@ -103,7 +103,6 @@ import {
           </div>
         </header>
 
-        <!-- Mobile Bottom Tab Bar -->
         <nav class="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-surface/90 backdrop-blur-xl border-t border-border flex items-center justify-around px-2 z-[50]">
           <a *ngFor="let link of mobileNavLinks" [routerLink]="link.path" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: link.path === '/'}"
              [attr.data-tutorial]="link.tutorialKey"
@@ -113,7 +112,6 @@ import {
           </a>
         </nav>
 
-        <!-- Main Content -->
         <main class="flex-1 overflow-auto p-4 md:p-10 transition-colors duration-300 pb-24 md:pb-10">
           <div class="max-w-[1400px] mx-auto">
             <router-outlet />
@@ -131,6 +129,10 @@ export class App implements OnInit {
   authService = inject(AuthService);
   themeService = inject(ThemeService);
   tutorialService = inject(TutorialService);
+  private budgetService = inject(BudgetService);
+  private accountService = inject(AccountService);
+  private transactionService = inject(TransactionService);
+  
   private eRef = inject(ElementRef);
   private router = inject(Router);
 
@@ -173,7 +175,20 @@ export class App implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.authService.isAuthenticated()) {
+      this.syncData();
+    }
+  }
+
+  private syncData() {
+    // Global data reconciliation on startup/login
+    Promise.all([
+      this.budgetService.loadBudgets(),
+      this.accountService.loadAccounts(),
+      this.transactionService.loadDashboardSummary()
+    ]).catch(err => console.error('Initial data sync failed', err));
+  }
 
   toggleDropdown(event: MouseEvent) {
     event.stopPropagation();

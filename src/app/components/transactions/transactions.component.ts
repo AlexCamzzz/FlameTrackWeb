@@ -5,6 +5,7 @@ import { TransactionService } from '../../services/transaction.service';
 import { TransferService } from '../../services/transfer.service';
 import { AccountService } from '../../services/account.service';
 import { ThemeService } from '../../services/theme.service';
+import { BudgetService } from '../../services/budget.service';
 import { CategoryService } from '../../services/category.service';
 import { RecurringTransactionService } from '../../services/recurring-transaction.service';
 import { TransactionTypeDto, AccountType, RecurrenceFrequency } from '../../models/transaction.dto';
@@ -155,7 +156,7 @@ import { CreateRecurringTransactionModalComponent } from './create-recurring-tra
                        </div>
                     </div>
                     <div class="text-right">
-                       <p class="text-sm font-black tracking-tighter" [class.text-income-label]="tx.type === 0" [class.text-expense-label]="tx.type === 1" [class.privacy-blur]="themeService.isPrivacyModeActive()">
+                       <p class="text-sm font-black tracking-tighter privacy-blur" [class.text-income-label]="tx.type === 0" [class.text-expense-label]="tx.type === 1">
                           {{ tx.type === 0 ? '+' : '-' }}{{ tx.amount | currency:'MXN ':'symbol':'1.0-0' }}
                        </p>
                     </div>
@@ -189,7 +190,7 @@ import { CreateRecurringTransactionModalComponent } from './create-recurring-tra
                        </div>
                     </div>
                     <div class="text-center md:text-right flex-shrink-0">
-                       <p class="text-xl font-black text-foreground tracking-tighter" [class.privacy-blur]="themeService.isPrivacyModeActive()">{{ trf.amount | currency:'MXN ' }}</p>
+                       <p class="text-xl font-black text-foreground tracking-tighter privacy-blur">{{ trf.amount | currency:'MXN ' }}</p>
                        <p class="text-[9px] font-black text-subtle uppercase opacity-60">{{ trf.date | date:'dd MMM, yyyy' }}</p>
                     </div>
                  </div>
@@ -219,7 +220,7 @@ import { CreateRecurringTransactionModalComponent } from './create-recurring-tra
                              <span class="px-2 py-1 bg-foreground/[0.05] border border-border rounded-lg text-[8px] font-black uppercase tracking-widest text-subtle shadow-inner">
                                 {{ getFrequencyName(rec.frequency) }}
                              </span>
-                             <p class="text-xl font-black text-foreground tracking-tighter mt-2" [class.privacy-blur]="themeService.isPrivacyModeActive()">{{ rec.amount | currency:'MXN ' }}</p>
+                             <p class="text-xl font-black text-foreground tracking-tighter mt-2 privacy-blur">{{ rec.amount | currency:'MXN ' }}</p>
                           </div>
                        </div>
                        <div class="space-y-1">
@@ -268,6 +269,7 @@ export class TransactionsComponent implements OnInit {
   protected transactionService = inject(TransactionService);
   protected transferService = inject(TransferService);
   protected accountService = inject(AccountService);
+  protected budgetService = inject(BudgetService);
   protected themeService = inject(ThemeService);
   protected categoryService = inject(CategoryService);
   protected recurringService = inject(RecurringTransactionService);
@@ -294,7 +296,8 @@ export class TransactionsComponent implements OnInit {
         this.transferService.loadTransfers(),
         this.accountService.loadAccounts(),
         this.categoryService.loadCategories(),
-        this.recurringService.loadRecurring()
+        this.recurringService.loadRecurring(),
+        this.budgetService.loadBudgets()
       ]);
     } finally {
       this.isLoading.set(false);
@@ -313,13 +316,15 @@ export class TransactionsComponent implements OnInit {
     await Promise.all([
       this.transactionService.loadTransactions(),
       this.transferService.loadTransfers(),
-      this.recurringService.loadRecurring()
+      this.recurringService.loadRecurring(),
+      this.budgetService.loadBudgets()
     ]);
   }
 
   async deleteTransaction(id: string) {
     if (confirm('Delete this entry? Account balance will be reversed.')) {
       await this.transactionService.deleteTransaction(id);
+      await this.budgetService.loadBudgets();
     }
   }
 
