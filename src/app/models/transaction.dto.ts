@@ -87,6 +87,11 @@ export interface DashboardBudgetDto {
   percentage: number;
 }
 
+export enum BudgetFrequency {
+  Monthly = 0,
+  Annual = 1
+}
+
 export interface BudgetDto {
   id?: string;
   categoryId: string;
@@ -94,6 +99,7 @@ export interface BudgetDto {
   spent: number;
   month: number;
   year: number;
+  frequency: BudgetFrequency;
 }
 
 export interface CreateBudgetRequestDto {
@@ -101,6 +107,7 @@ export interface CreateBudgetRequestDto {
   limit: number;
   month: number;
   year: number;
+  frequency: BudgetFrequency;
 }
 
 export enum RecurrenceFrequency {

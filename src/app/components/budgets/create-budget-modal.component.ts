@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BudgetService } from '../../services/budget.service';
 import { CategoryService } from '../../services/category.service';
 import { TutorialService } from '../../services/tutorial.service';
-import { CreateBudgetRequestDto, CategoryDto } from '../../models/transaction.dto';
+import { CreateBudgetRequestDto, CategoryDto, BudgetFrequency } from '../../models/transaction.dto';
 import { CategoryPickerModalComponent } from '../transactions/category-picker-modal.component';
 
 @Component({
@@ -27,6 +27,25 @@ import { CategoryPickerModalComponent } from '../transactions/category-picker-mo
         </div>
 
         <form (ngSubmit)="onSubmit()" class="p-8 space-y-6">
+          <div class="flex p-1 bg-foreground/[0.03] rounded-2xl border border-border">
+            <button type="button" 
+              (click)="model.frequency = frequencies.Monthly"
+              [class.bg-background]="model.frequency === frequencies.Monthly"
+              [class.shadow-sm]="model.frequency === frequencies.Monthly"
+              [class.text-primary]="model.frequency === frequencies.Monthly"
+              class="flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
+              Monthly
+            </button>
+            <button type="button" 
+              (click)="model.frequency = frequencies.Annual"
+              [class.bg-background]="model.frequency === frequencies.Annual"
+              [class.shadow-sm]="model.frequency === frequencies.Annual"
+              [class.text-primary]="model.frequency === frequencies.Annual"
+              class="flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all">
+              Annual
+            </button>
+          </div>
+
           <div>
             <label class="block text-[10px] font-black text-subtle uppercase tracking-widest mb-2 ml-1">Target Classification</label>
             <button type="button" (click)="isPickerOpen = true" 
@@ -78,12 +97,14 @@ export class CreateBudgetModalComponent implements OnInit {
 
   isSaving = false;
   isPickerOpen = false;
+  frequencies = BudgetFrequency;
 
   model: CreateBudgetRequestDto = {
     categoryId: '',
     limit: 0,
     month: new Date().getMonth() + 1,
-    year: new Date().getFullYear()
+    year: new Date().getFullYear(),
+    frequency: BudgetFrequency.Monthly
   };
 
   ngOnInit() {

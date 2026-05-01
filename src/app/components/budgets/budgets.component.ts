@@ -4,6 +4,7 @@ import { BudgetService } from '../../services/budget.service';
 import { CategoryService } from '../../services/category.service';
 import { CreateBudgetModalComponent } from './create-budget-modal.component';
 import { CreateTransactionModalComponent } from '../transactions/create-transaction-modal.component';
+import { BudgetFrequency } from '../../models/transaction.dto';
 
 @Component({
   selector: 'app-budgets',
@@ -28,7 +29,10 @@ import { CreateTransactionModalComponent } from '../transactions/create-transact
           <div class="card group transition-all border-border hover:border-primary/30 flex flex-col justify-between !p-6 md:!p-8 shadow-sm">
              <div class="space-y-6 md:space-y-8">
                <div class="flex justify-between items-start gap-4">
-                  <h3 class="text-md md:text-lg font-black text-foreground uppercase tracking-widest opacity-90 group-hover:text-primary transition-colors truncate">{{ categoryService.getCategoryName(budget.categoryId) }}</h3>
+                  <div class="min-w-0">
+                    <h3 class="text-md md:text-lg font-black text-foreground uppercase tracking-widest opacity-90 group-hover:text-primary transition-colors truncate">{{ categoryService.getCategoryName(budget.categoryId) }}</h3>
+                    <p class="text-[8px] font-black text-primary uppercase tracking-[0.2em] mt-1">{{ budget.frequency === frequencies.Annual ? 'Annual Allocation' : 'Monthly Provision' }}</p>
+                  </div>
                   <span class="text-[9px] font-black text-foreground bg-foreground/[0.05] border border-border px-2.5 py-1 rounded-lg tracking-widest flex-shrink-0">
                     {{ (budget.spent / (budget.limit || 1)) * 100 | number:'1.0-0' }}%
                   </span>
@@ -89,6 +93,7 @@ export class BudgetsComponent implements OnInit {
   categoryService = inject(CategoryService);
   isModalOpen = false;
   quickExpenseCategoryId: string | null = null;
+  frequencies = BudgetFrequency;
 
   ngOnInit() {
     this.budgetService.loadBudgets();
