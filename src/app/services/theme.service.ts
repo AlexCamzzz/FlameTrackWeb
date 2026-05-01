@@ -19,7 +19,7 @@ export class ThemeService {
   currentLogo = computed(() => {
     switch (this.currentThemeSignal()) {
       case 'theme-nord': return '/assets/Blue FT.svg';
-      case 'theme-deep-midnight': return '/assets/Red FT.svg';
+      case 'theme-deep-midnight': return '/assets/Purple FT.svg';
       case 'theme-sakura': return '/assets/Pink FT.svg';
       case 'theme-forest': return '/assets/Green FT.svg';
       case 'theme-pride': return '/assets/Rainbow FT.svg';

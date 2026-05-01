@@ -49,12 +49,12 @@ import { TutorialService } from '../../../services/tutorial.service';
 
              <!-- Midnight -->
              <div (click)="setTheme('theme-deep-midnight')"
-               [ngClass]="themeService.currentTheme() === 'theme-deep-midnight' ? 'border-[#BB86FC]' : 'border-[#FFFFFF0A]'"
-               class="p-6 bg-[#000000] border-2 rounded-3xl cursor-pointer transition-all hover:border-[#BB86FC] group shadow-sm">
+               [ngClass]="themeService.currentTheme() === 'theme-deep-midnight' ? 'border-[#7B1FA2]' : 'border-[#FFFFFF0A]'"
+               class="p-6 bg-[#000000] border-2 rounded-3xl cursor-pointer transition-all hover:border-[#7B1FA2] group shadow-sm">
                 <div class="w-full h-16 bg-[#0D0D0D] rounded-xl mb-4 border border-[#FFFFFF0A] shadow-inner"></div>
                 <div class="flex justify-between items-center">
                    <span class="text-[10px] font-black uppercase tracking-widest text-[#FFFFFF]">Deep Midnight</span>
-                   <div *ngIf="themeService.currentTheme() === 'theme-deep-midnight'" class="w-2 h-2 rounded-full bg-[#BB86FC] shadow-[0_0_8px_#BB86FC]"></div>
+                   <div *ngIf="themeService.currentTheme() === 'theme-deep-midnight'" class="w-2 h-2 rounded-full bg-[#7B1FA2] shadow-[0_0_8px_#7B1FA2]"></div>
                 </div>
              </div>
 
