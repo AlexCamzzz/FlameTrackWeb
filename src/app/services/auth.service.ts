@@ -16,6 +16,7 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
 
   private readonly TOKEN_KEY = 'flametrack_token';
+  private readonly REFRESH_TOKEN_KEY = 'flametrack_refresh_token';
   private readonly USER_KEY = 'flametrack_user';
 
   isAuthenticated = signal<boolean>(false);
@@ -42,6 +43,32 @@ export class AuthService {
       return localStorage.getItem(this.TOKEN_KEY);
     }
     return null;
+  }
+
+  getRefreshToken(): string | null {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem(this.REFRESH_TOKEN_KEY);
+    }
+    return null;
+  }
+
+  async refreshToken() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      this.logout();
+      throw new Error('No refresh token available');
+    }
+
+    try {
+      const response = await firstValueFrom(this.http.post<AuthResponseDto>(`${this.apiUrl}/refresh`, { refreshToken }));
+      this.setSession(response);
+      return response;
+    } catch (error) {
+      console.error('Refresh token failed', error);
+      this.logout();
+      throw error;
+    }
   }
 
   async login(credentials: LoginRequestDto) {
@@ -107,6 +134,7 @@ export class AuthService {
 
   private setSession(auth: AuthResponseDto) {
     localStorage.setItem(this.TOKEN_KEY, auth.token);
+    localStorage.setItem(this.REFRESH_TOKEN_KEY, auth.refreshToken);
     localStorage.setItem(this.USER_KEY, JSON.stringify(auth.user));
     this.currentUser.set(auth.user);
     this.isAuthenticated.set(true);
@@ -116,6 +144,7 @@ export class AuthService {
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem(this.TOKEN_KEY);
+      localStorage.removeItem(this.REFRESH_TOKEN_KEY);
       localStorage.removeItem(this.USER_KEY);
       this.currentUser.set(null);
       this.isAuthenticated.set(false);

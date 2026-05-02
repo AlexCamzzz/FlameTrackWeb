@@ -1,7 +1,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from './services/auth.service';
-import { catchError, throwError } from 'rxjs';
+import { catchError, throwError, switchMap, from } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
@@ -16,9 +16,21 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        // Auto logout if 401 Unauthorized is returned from API
-        authService.logout();
+      // If unauthorized and not already trying to refresh or calling refresh endpoint
+      if (error.status === 401 && !req.url.includes('/auth/refresh')) {
+        return from(authService.refreshToken()).pipe(
+          switchMap(() => {
+            const newToken = authService.getToken();
+            const retryRequest = req.clone({
+              headers: req.headers.set('Authorization', `Bearer ${newToken}`)
+            });
+            return next(retryRequest);
+          }),
+          catchError((refreshError) => {
+            authService.logout();
+            return throwError(() => refreshError);
+          })
+        );
       }
       return throwError(() => error);
     })

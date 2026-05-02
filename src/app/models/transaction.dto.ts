@@ -197,6 +197,7 @@ export interface RegisterRequestDto {
 
 export interface AuthResponseDto {
   token: string;
+  refreshToken: string;
   user: UserDto;
 }
 
