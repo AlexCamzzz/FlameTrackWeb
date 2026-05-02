@@ -9,27 +9,32 @@ import { AccountService } from './services/account.service';
 import { TransactionService } from './services/transaction.service';
 import { filter } from 'rxjs';
 import { TermsModalComponent } from './components/legal/terms-modal.component';
+import { OnboardingComponent } from './components/onboarding/onboarding.component';
 import { TutorialOverlayComponent } from './components/tutorial/tutorial-overlay.component';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { 
   heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, 
   heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, 
   heroLifebuoy, heroEye, heroEyeSlash, heroHome, heroCreditCard, 
-  heroArrowsRightLeft, heroChartPie, heroTrophy 
+  heroArrowsRightLeft, heroChartPie, heroTrophy,
+  heroRocketLaunch, heroCheckBadge, heroSparkles, heroArrowRight
 } from '@ng-icons/heroicons/outline';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TermsModalComponent, TutorialOverlayComponent, NgIconComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TermsModalComponent, OnboardingComponent, TutorialOverlayComponent, NgIconComponent],
   providers: [provideIcons({ 
     heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, 
     heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, 
     heroLifebuoy, heroEye, heroEyeSlash, heroHome, heroCreditCard, 
-    heroArrowsRightLeft, heroChartPie, heroTrophy 
+    heroArrowsRightLeft, heroChartPie, heroTrophy,
+    heroRocketLaunch, heroCheckBadge, heroSparkles, heroArrowRight
   })],
   template: `
     <app-tutorial-overlay />
+    
+    <app-onboarding *ngIf="showOnboarding()" (completed)="onOnboardingComplete()"></app-onboarding>
 
     <!-- Help FAB -->
     <button *ngIf="authService.isAuthenticated() && tutorialService.helpButtonVisible() && !tutorialService.isActive()"
@@ -138,6 +143,7 @@ export class App implements OnInit {
 
   isDropdownOpen = false;
   isSettingsActive = signal(false);
+  showOnboarding = signal(false);
 
   navLinks = [
     { path: '/', label: 'Dashboard' },
@@ -177,13 +183,28 @@ export class App implements OnInit {
 
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
-      this.syncData();
+      this.syncData().then(() => {
+        this.checkOnboarding();
+      });
     }
+  }
+
+  private checkOnboarding() {
+    if (this.accountService.accounts().length === 0) {
+      this.showOnboarding.set(true);
+    }
+  }
+
+  onOnboardingComplete() {
+    this.showOnboarding.set(false);
+    setTimeout(() => {
+      this.tutorialService.start();
+    }, 500);
   }
 
   private syncData() {
     // Global data reconciliation on startup/login
-    Promise.all([
+    return Promise.all([
       this.budgetService.loadBudgets(),
       this.accountService.loadAccounts(),
       this.transactionService.loadDashboardSummary()
