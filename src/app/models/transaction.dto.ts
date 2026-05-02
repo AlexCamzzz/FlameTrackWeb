@@ -211,3 +211,10 @@ export interface DashboardSummaryDto {
   goals: GoalDto[];
   accounts: AccountDto[];
 }
+
+export interface PaginatedResponseDto<T> {
+  items: T[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}

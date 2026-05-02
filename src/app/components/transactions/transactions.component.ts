@@ -81,94 +81,70 @@ import { CreateRecurringTransactionModalComponent } from './create-recurring-tra
          </div>
       } @else {
         @if (activeTab === 'transactions') {
-           <!-- Desktop Table -->
-           <div class="hidden md:block card !p-0 overflow-hidden border-border">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="table-header">
-                    <th class="py-4 px-8">Description</th>
-                    <th class="py-4 px-8">Amount</th>
-                    <th class="py-4 px-8">Account</th>
-                    <th class="py-4 px-8">Date</th>
-                    <th class="py-4 px-8">Category</th>
-                    <th class="py-4 px-8 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-border/20">
-                  @for (tx of filteredTransactions(); track tx.id) {
-                    <tr class="hover:bg-foreground/[0.01] transition-colors group">
-                      <td class="py-5 px-8">
-                        <div class="flex items-center space-x-4">
-                          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white opacity-90 shadow-sm" 
-                               [style.backgroundColor]="categoryService.getCategoryColor(tx.categoryId)">
-                            <span class="text-sm font-black">{{ categoryService.getCategoryName(tx.categoryId).substring(0, 1) }}</span>
-                          </div>
-                          <span class="text-xs font-bold text-foreground/90 uppercase tracking-tight">{{ tx.description }}</span>
-                        </div>
-                      </td>
-                      <td class="py-5 px-8 font-black text-sm" [class.text-income-label]="tx.type === 0" [class.text-expense-label]="tx.type === 1" [class.privacy-blur]="themeService.isPrivacyModeActive()">
-                        {{ tx.type === 0 ? '+' : '-' }}{{ tx.amount | currency:'MXN ' }}
-                      </td>
-                      <td class="py-5 px-8">
-                         <div class="flex items-center space-x-2 opacity-60">
-                            <div class="w-1.5 h-1.5 rounded-full" [style.backgroundColor]="accountService.getAccountColor(tx.accountId)"></div>
-                            <span class="text-[10px] font-black text-foreground uppercase">{{ accountService.getAccountName(tx.accountId) }}</span>
-                         </div>
-                      </td>
-                      <td class="py-5 px-8 text-subtle font-black text-[10px] uppercase opacity-60">{{ tx.date | date:'dd MMM, yyyy' }}</td>
-                      <td class="py-5 px-8">
-                        <span class="px-2 py-0.5 border border-border rounded text-[9px] font-black uppercase tracking-widest text-subtle">
-                          {{ categoryService.getCategoryName(tx.categoryId) }}
-                        </span>
-                      </td>
-                      <td class="py-5 px-8 text-right">
-                         <button (click)="deleteTransaction(tx.id)" class="p-2 text-subtle hover:text-expense opacity-0 group-hover:opacity-100 transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                         </button>
-                      </td>
-                    </tr>
-                  } @empty {
-                    <tr><td colspan="6" class="py-20 text-center">
-                       <div class="flex flex-col items-center space-y-4 opacity-40">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-                          <p class="text-[10px] font-black uppercase tracking-widest italic">No entries match your parameters.</p>
-                       </div>
-                    </td></tr>
-                  }
-                </tbody>
-              </table>
-           </div>
-
-           <!-- Mobile Cards -->
-           <div class="md:hidden space-y-3">
+           <!-- Unified Card Layout -->
+           <div class="grid grid-cols-1 gap-4">
               @for (tx of filteredTransactions(); track tx.id) {
-                 <div class="card !p-4 flex items-center justify-between border-border active:scale-[0.98] transition-transform shadow-sm">
-                    <div class="flex items-center space-x-4 min-w-0">
-                       <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white opacity-90 flex-shrink-0 shadow-sm" 
-                            [style.backgroundColor]="categoryService.getCategoryColor(tx.categoryId)">
-                          <span class="text-sm font-black">{{ categoryService.getCategoryName(tx.categoryId).substring(0, 1) }}</span>
-                       </div>
-                       <div class="min-w-0">
-                          <p class="text-xs font-bold text-foreground truncate uppercase">{{ tx.description }}</p>
-                          <p class="text-[9px] font-black text-subtle uppercase tracking-widest mt-0.5 opacity-60">
-                             {{ tx.date | date:'dd MMM' }} • {{ accountService.getAccountName(tx.accountId) }}
-                          </p>
-                       </div>
+                <div class="card !p-4 md:!p-6 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 border-border group transition-all hover:border-primary/20">
+                  <div class="flex items-center space-x-4 w-full md:w-auto">
+                    <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white opacity-90 flex-shrink-0 shadow-sm transition-transform group-hover:scale-110" 
+                         [style.backgroundColor]="categoryService.getCategoryColor(tx.categoryId)">
+                      <span class="text-lg font-black">{{ categoryService.getCategoryName(tx.categoryId).substring(0, 1) }}</span>
                     </div>
+                    <div class="min-w-0 flex-1">
+                      <p class="text-sm font-black text-foreground uppercase tracking-tight truncate">{{ tx.description }}</p>
+                      <div class="flex items-center space-x-2 mt-1">
+                        <div class="w-1.5 h-1.5 rounded-full" [style.backgroundColor]="accountService.getAccountColor(tx.accountId)"></div>
+                        <span class="text-[9px] font-black text-subtle uppercase tracking-widest opacity-60">
+                          {{ accountService.getAccountName(tx.accountId) }} • {{ tx.date | date:'dd MMM, yyyy' }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between md:justify-end w-full md:w-auto md:space-x-8">
+                    <div class="hidden lg:block px-3 py-1 border border-border rounded-lg text-[9px] font-black uppercase tracking-[0.2em] text-subtle">
+                      {{ categoryService.getCategoryName(tx.categoryId) }}
+                    </div>
+                    
                     <div class="text-right">
-                       <p class="text-sm font-black tracking-tighter privacy-blur" [class.text-income-label]="tx.type === 0" [class.text-expense-label]="tx.type === 1">
-                          {{ tx.type === 0 ? '+' : '-' }}{{ tx.amount | currency:'MXN ':'symbol':'1.0-0' }}
-                       </p>
+                      <p class="text-lg font-black tracking-tighter privacy-blur" [class.text-income-label]="tx.type === 0" [class.text-expense-label]="tx.type === 1">
+                        {{ tx.type === 0 ? '+' : '-' }}{{ tx.amount | currency:'MXN ' }}
+                      </p>
                     </div>
-                 </div>
+
+                    <button (click)="deleteTransaction(tx.id)" class="p-2 text-subtle hover:text-expense opacity-40 md:opacity-0 group-hover:opacity-100 transition-all">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    </button>
+                  </div>
+                </div>
               } @empty {
-                <div class="card py-20 flex flex-col items-center justify-center text-center space-y-6 border-dashed border-border opacity-60">
+                <div class="card py-32 flex flex-col items-center justify-center text-center space-y-6 border-dashed border-border opacity-60">
                    <div class="w-16 h-16 bg-foreground/[0.03] border border-border rounded-full flex items-center justify-center text-subtle">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
                    </div>
                    <p class="text-[10px] font-black text-foreground uppercase tracking-[0.3em]">No entries logged</p>
                 </div>
               }
+           </div>
+
+           <!-- Pagination Controls -->
+           <div class="mt-8 flex items-center justify-between">
+              <p class="text-[9px] font-black text-subtle uppercase tracking-widest">
+                Showing {{ filteredTransactions().length }} of {{ transactionService.totalCount() }} entries
+              </p>
+              <div class="flex items-center space-x-2">
+                <button [disabled]="currentPage() === 1" (click)="changePage(currentPage() - 1)" 
+                  class="p-2 rounded-lg border border-border hover:bg-foreground/[0.03] disabled:opacity-20 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+                </button>
+                <span class="text-[10px] font-black uppercase tracking-widest px-4 py-2 bg-foreground/[0.03] border border-border rounded-lg">
+                  Page {{ currentPage() }} of {{ totalPages() || 1 }}
+                </span>
+                <button [disabled]="currentPage() >= totalPages()" (click)="changePage(currentPage() + 1)" 
+                  class="p-2 rounded-lg border border-border hover:bg-foreground/[0.03] disabled:opacity-20 transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+                </button>
+              </div>
            </div>
 
         } @else if (activeTab === 'transfers') {
@@ -281,6 +257,11 @@ export class TransactionsComponent implements OnInit {
   searchTerm = signal<string>('');
   isLoading = signal(true);
 
+  // Pagination
+  currentPage = signal(1);
+  pageSize = signal(20);
+  totalPages = computed(() => Math.ceil(this.transactionService.totalCount() / this.pageSize()));
+
   filteredTransactions = computed(() => {
     const term = this.searchTerm().toLowerCase();
     const txs = this.transactionService.transactions();
@@ -289,10 +270,14 @@ export class TransactionsComponent implements OnInit {
   });
 
   async ngOnInit() {
+    await this.loadAllData();
+  }
+
+  async loadAllData() {
     this.isLoading.set(true);
     try {
       await Promise.all([
-        this.transactionService.loadTransactions(),
+        this.transactionService.loadTransactions(this.currentPage(), this.pageSize()),
         this.transferService.loadTransfers(),
         this.accountService.loadAccounts(),
         this.categoryService.loadCategories(),
@@ -304,6 +289,15 @@ export class TransactionsComponent implements OnInit {
     }
   }
 
+  async changePage(page: number) {
+    if (page < 1 || page > this.totalPages()) return;
+    this.currentPage.set(page);
+    this.isLoading.set(true);
+    await this.transactionService.loadTransactions(this.currentPage(), this.pageSize());
+    this.isLoading.set(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   getFrequencyName(freq: number): string {
     const names = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
     return names[freq] || 'Monthly';
@@ -313,12 +307,7 @@ export class TransactionsComponent implements OnInit {
     this.isTransactionModalOpen = false;
     this.isTransferModalOpen = false;
     this.isRecurringModalOpen = false;
-    await Promise.all([
-      this.transactionService.loadTransactions(),
-      this.transferService.loadTransfers(),
-      this.recurringService.loadRecurring(),
-      this.budgetService.loadBudgets()
-    ]);
+    await this.loadAllData();
   }
 
   async deleteTransaction(id: string) {

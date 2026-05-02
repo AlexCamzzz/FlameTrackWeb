@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
-import { TransactionDto, CreateTransactionRequestDto, DashboardSummaryDto } from '../models/transaction.dto';
+import { TransactionDto, CreateTransactionRequestDto, DashboardSummaryDto, PaginatedResponseDto } from '../models/transaction.dto';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -16,14 +16,20 @@ export class TransactionService {
   private transactionsSignal = signal<TransactionDto[]>([]);
   transactions = computed(() => this.transactionsSignal());
 
+  private totalCountSignal = signal<number>(0);
+  totalCount = computed(() => this.totalCountSignal());
+
   private summarySignal = signal<DashboardSummaryDto | null>(null);
   summary = computed(() => this.summarySignal());
 
-  async loadTransactions() {
+  async loadTransactions(page: number = 1, pageSize: number = 20) {
     if (!isPlatformBrowser(this.platformId)) return;
     try {
-      const txs = await firstValueFrom(this.http.get<TransactionDto[]>(`${this.apiUrl}/transactions`));
-      this.transactionsSignal.set(txs);
+      const response = await firstValueFrom(this.http.get<PaginatedResponseDto<TransactionDto>>(`${this.apiUrl}/transactions`, {
+        params: { page, pageSize }
+      }));
+      this.transactionsSignal.set(response.items);
+      this.totalCountSignal.set(response.totalCount);
     } catch (error) {
       console.error('Error loading transactions', error);
     }
