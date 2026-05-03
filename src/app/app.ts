@@ -190,13 +190,19 @@ export class App implements OnInit {
   }
 
   private checkOnboarding() {
+    const onboardingDone = localStorage.getItem('flametrack_onboarding_done') === 'true';
+    if (onboardingDone) return;
+
     if (this.accountService.accounts().length === 0) {
       this.showOnboarding.set(true);
+    } else {
+      localStorage.setItem('flametrack_onboarding_done', 'true');
     }
   }
 
   onOnboardingComplete() {
     this.showOnboarding.set(false);
+    localStorage.setItem('flametrack_onboarding_done', 'true');
     setTimeout(() => {
       this.tutorialService.start();
     }, 500);
