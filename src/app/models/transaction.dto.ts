@@ -162,6 +162,35 @@ export interface DepositGoalRequestDto {
   fromAccountId: string;
 }
 
+export enum DebtType {
+  OwedToMe = 0,
+  IOwe = 1
+}
+
+export interface DebtDto {
+  id: string;
+  creditorDebtor: string;
+  description: string;
+  totalAmount: number;
+  remainingAmount: number;
+  dueDate: string;
+  type: DebtType;
+  isCleared: boolean;
+}
+
+export interface CreateDebtRequestDto {
+  creditorDebtor: string;
+  description: string;
+  totalAmount: number;
+  dueDate: string;
+  type: DebtType;
+}
+
+export interface PayDebtRequestDto {
+  amount: number;
+  accountId: string;
+}
+
 export interface CategoryDto {
   id: string;
   name: string;

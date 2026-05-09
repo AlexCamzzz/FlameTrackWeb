@@ -20,7 +20,14 @@ export const routes: Routes = [
   { path: 'transactions', component: TransactionsComponent, canActivate: [authGuard], title: 'FlameTrack — Financial Ledger' },
   { path: 'accounts', component: AccountsComponent, canActivate: [authGuard], title: 'FlameTrack — Liquidity Sources' },
   { path: 'budgets', component: BudgetsComponent, canActivate: [authGuard], title: 'FlameTrack — Capital Provisions' },
-  { path: 'goals', component: GoalsComponent, canActivate: [authGuard], title: 'FlameTrack — Strategic Targets' },
+  { 
+    path: 'debts', 
+    loadComponent: () => import('./components/debts/debts.component').then(m => m.DebtsComponent),
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'goals', 
+ component: GoalsComponent, canActivate: [authGuard], title: 'FlameTrack — Strategic Targets' },
   { path: 'categories', component: CategoriesComponent, canActivate: [authGuard], title: 'FlameTrack — Data Classification' },
   { path: 'account', component: AccountComponent, canActivate: [authGuard], title: 'FlameTrack — Profile Identity' },
   { path: 'preferences', component: PreferencesComponent, canActivate: [authGuard], title: 'FlameTrack — System Preferences' },

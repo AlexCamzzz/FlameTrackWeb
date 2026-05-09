@@ -7,6 +7,7 @@ import { TutorialService } from './services/tutorial.service';
 import { BudgetService } from './services/budget.service';
 import { AccountService } from './services/account.service';
 import { TransactionService } from './services/transaction.service';
+import { DebtService } from './services/debt.service';
 import { filter } from 'rxjs';
 import { TermsModalComponent } from './components/legal/terms-modal.component';
 import { OnboardingComponent } from './components/onboarding/onboarding.component';
@@ -16,7 +17,7 @@ import {
   heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, 
   heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, 
   heroLifebuoy, heroEye, heroEyeSlash, heroHome, heroCreditCard, 
-  heroArrowsRightLeft, heroChartPie, heroTrophy,
+  heroArrowsRightLeft, heroChartPie, heroTrophy, heroCircleStack,
   heroRocketLaunch, heroCheckBadge, heroSparkles, heroArrowRight
 } from '@ng-icons/heroicons/outline';
 
@@ -28,7 +29,7 @@ import {
     heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, 
     heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, 
     heroLifebuoy, heroEye, heroEyeSlash, heroHome, heroCreditCard, 
-    heroArrowsRightLeft, heroChartPie, heroTrophy,
+    heroArrowsRightLeft, heroChartPie, heroTrophy, heroCircleStack,
     heroRocketLaunch, heroCheckBadge, heroSparkles, heroArrowRight
   })],
   template: `
@@ -137,6 +138,7 @@ export class App implements OnInit {
   private budgetService = inject(BudgetService);
   private accountService = inject(AccountService);
   private transactionService = inject(TransactionService);
+  private debtService = inject(DebtService);
   
   private eRef = inject(ElementRef);
   private router = inject(Router);
@@ -150,6 +152,7 @@ export class App implements OnInit {
     { path: '/transactions', label: 'History' },
     { path: '/accounts', label: 'Accounts' },
     { path: '/budgets', label: 'Budgets' },
+    { path: '/debts', label: 'Debts' },
     { path: '/goals', label: 'Goals' }
   ];
 
@@ -157,7 +160,7 @@ export class App implements OnInit {
     { path: '/', label: 'Home', icon: 'heroHome', tutorialKey: 'nav-home-mobile' },
     { path: '/transactions', label: 'Ledger', icon: 'heroArrowsRightLeft', tutorialKey: 'nav-ledger-mobile' },
     { path: '/accounts', label: 'Vaults', icon: 'heroCreditCard', tutorialKey: 'nav-accounts-mobile' },
-    { path: '/budgets', label: 'Budgets', icon: 'heroChartPie', tutorialKey: 'nav-budgets-mobile' },
+    { path: '/debts', label: 'Debts', icon: 'heroCircleStack', tutorialKey: 'nav-debts-mobile' },
     { path: '/goals', label: 'Targets', icon: 'heroTrophy', tutorialKey: 'nav-goals-mobile' }
   ];
 
@@ -213,6 +216,7 @@ export class App implements OnInit {
     return Promise.all([
       this.budgetService.loadBudgets(),
       this.accountService.loadAccounts(),
+      this.debtService.loadDebts(),
       this.transactionService.loadDashboardSummary()
     ]).catch(err => console.error('Initial data sync failed', err));
   }
