@@ -12,13 +12,15 @@ import { TransactionTypeDto, AccountType, RecurrenceFrequency } from '../../mode
 import { CreateTransactionModalComponent } from './create-transaction-modal.component';
 import { CreateTransferModalComponent } from '../transfers/create-transfer-modal.component';
 import { CreateRecurringTransactionModalComponent } from './create-recurring-transaction-modal.component';
+import { CategoryChartComponent } from '../categories/category-chart.component';
 
 @Component({
   selector: 'app-transactions',
   standalone: true,
   imports: [
     CommonModule, CurrencyPipe, DatePipe, FormsModule, 
-    CreateTransactionModalComponent, CreateTransferModalComponent, CreateRecurringTransactionModalComponent
+    CreateTransactionModalComponent, CreateTransferModalComponent, CreateRecurringTransactionModalComponent,
+    CategoryChartComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -81,6 +83,14 @@ import { CreateRecurringTransactionModalComponent } from './create-recurring-tra
          </div>
       } @else {
         @if (activeTab === 'transactions') {
+           
+           @if (chartData().length > 0) {
+             <section class="card !p-8 shadow-md mb-8">
+                <h2 class="text-[11px] font-black uppercase tracking-[0.3em] text-subtle mb-6 px-1">Expense Analysis</h2>
+                <app-category-chart [data]="chartData()"></app-category-chart>
+             </section>
+           }
+
            <!-- Unified Card Layout -->
            <div class="grid grid-cols-1 gap-4">
               @for (tx of filteredTransactions(); track tx.id) {
@@ -261,6 +271,22 @@ export class TransactionsComponent implements OnInit {
   currentPage = signal(1);
   pageSize = signal(20);
   totalPages = computed(() => Math.ceil(this.transactionService.totalCount() / this.pageSize()));
+
+  chartData = computed(() => {
+    const txs = this.filteredTransactions();
+    const expenses = txs.filter(t => t.type === TransactionTypeDto.Expense);
+    
+    const aggregation: Record<string, number> = {};
+    expenses.forEach(t => {
+      aggregation[t.categoryId] = (aggregation[t.categoryId] || 0) + t.amount;
+    });
+
+    return Object.entries(aggregation).map(([categoryId, amount]) => ({
+      name: this.categoryService.getCategoryName(categoryId),
+      amount: Math.round(amount),
+      color: this.categoryService.getCategoryColor(categoryId)
+    })).sort((a, b) => b.amount - a.amount);
+  });
 
   filteredTransactions = computed(() => {
     const term = this.searchTerm().toLowerCase();

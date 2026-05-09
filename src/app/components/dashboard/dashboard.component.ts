@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy, computed } from '@angular/core';
 import { CommonModule, CurrencyPipe, DecimalPipe, DatePipe } from '@angular/common';
 import { TransactionService } from '../../services/transaction.service';
 import { TransactionTypeDto } from '../../models/transaction.dto';
@@ -6,11 +6,12 @@ import { CategoryService } from '../../services/category.service';
 import { RouterLink } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ACCOUNT_ICONS } from '../../models/constants';
+import { CategoryChartComponent } from '../categories/category-chart.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DecimalPipe, DatePipe, RouterLink],
+  imports: [CommonModule, CurrencyPipe, DecimalPipe, DatePipe, RouterLink, CategoryChartComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (transactionService.summary(); as summary) {
@@ -107,6 +108,11 @@ import { ACCOUNT_ICONS } from '../../models/constants';
                   </div>
                 }
               </div>
+            </section>
+
+            <section class="card !p-8 shadow-md">
+              <h2 class="text-[11px] font-black uppercase tracking-[0.3em] text-subtle mb-8 px-1">Resource Distribution</h2>
+              <app-category-chart [data]="chartData()"></app-category-chart>
             </section>
 
             <section class="card !p-8 shadow-md">
@@ -215,6 +221,20 @@ export class DashboardComponent implements OnInit {
   protected categoryService = inject(CategoryService);
   private sanitizer = inject(DomSanitizer);
   protected TransactionTypeDto = TransactionTypeDto;
+
+  chartData = computed(() => {
+    const summary = this.transactionService.summary();
+    if (!summary) return [];
+    
+    // Sort by amount descending
+    return [...summary.categoryExpenses]
+      .sort((a, b) => b.amount - a.amount)
+      .map(ce => ({
+        name: this.categoryService.getCategoryName(ce.categoryId),
+        amount: ce.amount,
+        color: this.categoryService.getCategoryColor(ce.categoryId)
+      }));
+  });
 
   ngOnInit() {
     this.transactionService.loadDashboardSummary();
