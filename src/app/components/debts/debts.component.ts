@@ -4,11 +4,13 @@ import { DebtService } from '../../services/debt.service';
 import { AccountService } from '../../services/account.service';
 import { TransactionTypeDto, DebtType, DebtDto } from '../../models/transaction.dto';
 import { FormsModule } from '@angular/forms';
+import { CreateDebtModalComponent } from './create-debt-modal.component';
+import { PayDebtModalComponent } from './pay-debt-modal.component';
 
 @Component({
   selector: 'app-debts',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, DecimalPipe, FormsModule],
+  imports: [CommonModule, CurrencyPipe, DatePipe, DecimalPipe, FormsModule, CreateDebtModalComponent, PayDebtModalComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-8 animate-fade-in pb-12">
@@ -74,7 +76,7 @@ import { FormsModule } from '@angular/forms';
                   </div>
                   <div class="flex items-center space-x-2">
                     @if (!debt.isCleared) {
-                      <button (click)="openPayModal(debt)" class="p-2 bg-foreground/5 hover:bg-primary/10 text-subtle hover:text-primary rounded-xl transition-all shadow-sm border border-border group/btn">
+                      <button (click)="selectedDebt.set(debt); isPayModalOpen.set(true)" class="p-2 bg-foreground/5 hover:bg-primary/10 text-subtle hover:text-primary rounded-xl transition-all shadow-sm border border-border group/btn">
                          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                       </button>
                     }
@@ -97,88 +99,11 @@ import { FormsModule } from '@angular/forms';
 
       <!-- Modals -->
       @if (isCreateModalOpen()) {
-        <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-fade-in">
-          <div class="card !p-8 w-full max-w-md shadow-2xl border-primary/20 animate-scale-in">
-            <h2 class="text-xl font-black text-foreground uppercase tracking-widest mb-8">Log New Obligation</h2>
-            
-            <form (submit)="createDebt()" class="space-y-6">
-              <div class="flex flex-col space-y-2">
-                <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Entity / Person</label>
-                <input type="text" [(ngModel)]="newDebt.creditorDebtor" name="creditorDebtor" class="input-premium w-full" placeholder="Who?" required>
-              </div>
-
-              <div class="flex flex-col space-y-2">
-                <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Description</label>
-                <input type="text" [(ngModel)]="newDebt.description" name="description" class="input-premium w-full" placeholder="What for?">
-              </div>
-
-              <div class="grid grid-cols-2 gap-4">
-                <div class="flex flex-col space-y-2">
-                  <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Amount</label>
-                  <input type="number" [(ngModel)]="newDebt.totalAmount" name="totalAmount" class="input-premium w-full" placeholder="0.00" required>
-                </div>
-                <div class="flex flex-col space-y-2">
-                  <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Due Date</label>
-                  <input type="date" [(ngModel)]="newDebt.dueDate" name="dueDate" class="input-premium w-full" required>
-                </div>
-              </div>
-
-              <div class="flex flex-col space-y-2">
-                <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Debt Direction</label>
-                <div class="flex bg-foreground/[0.03] p-1 rounded-xl border border-border">
-                  <button type="button" (click)="newDebt.type = 1" 
-                    [class.bg-expense]="newDebt.type === 1" [class.text-white]="newDebt.type === 1"
-                    [class.text-subtle]="newDebt.type !== 1"
-                    class="flex-1 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">I Owe</button>
-                  <button type="button" (click)="newDebt.type = 0" 
-                    [class.bg-income]="newDebt.type === 0" [class.text-white]="newDebt.type === 0"
-                    [class.text-subtle]="newDebt.type !== 0"
-                    class="flex-1 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">Owed To Me</button>
-                </div>
-              </div>
-
-              <div class="flex gap-4 pt-4">
-                <button type="button" (click)="isCreateModalOpen.set(false)" class="btn-secondary flex-1">Cancel</button>
-                <button type="submit" class="btn-premium flex-1">Create</button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <app-create-debt-modal (close)="isCreateModalOpen.set(false)" />
       }
 
-      @if (isPayModalOpen()) {
-        <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-fade-in">
-          <div class="card !p-8 w-full max-w-md shadow-2xl border-primary/20 animate-scale-in">
-            <h2 class="text-xl font-black text-foreground uppercase tracking-widest mb-8">Process Payment</h2>
-            
-            <form (submit)="payDebt()" class="space-y-6">
-              <div class="p-4 bg-foreground/[0.02] border border-border rounded-2xl mb-6">
-                <p class="text-[10px] font-black text-subtle uppercase tracking-widest mb-1">Target</p>
-                <p class="text-sm font-black text-foreground uppercase">{{ selectedDebt()?.creditorDebtor }}</p>
-                <p class="text-[10px] font-bold text-subtle uppercase opacity-60">Remaining: {{ selectedDebt()?.remainingAmount | currency }}</p>
-              </div>
-
-              <div class="flex flex-col space-y-2">
-                <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Payment Amount</label>
-                <input type="number" [(ngModel)]="payAmount" name="payAmount" class="input-premium w-full" [max]="selectedDebt()?.remainingAmount || 0" required>
-              </div>
-
-              <div class="flex flex-col space-y-2">
-                <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Source Account</label>
-                <select [(ngModel)]="payAccountId" name="accountId" class="input-premium w-full" required>
-                   @for (acc of accountService.accounts(); track acc.id) {
-                     <option [value]="acc.id">{{ acc.name }} ({{ acc.balance | currency }})</option>
-                   }
-                </select>
-              </div>
-
-              <div class="flex gap-4 pt-4">
-                <button type="button" (click)="isPayModalOpen.set(false)" class="btn-secondary flex-1">Cancel</button>
-                <button type="submit" class="btn-premium flex-1">Confirm</button>
-              </div>
-            </form>
-          </div>
-        </div>
+      @if (isPayModalOpen() && selectedDebt(); as debt) {
+        <app-pay-debt-modal [debt]="debt" (close)="isPayModalOpen.set(false)" />
       }
     </div>
   `
@@ -190,17 +115,6 @@ export class DebtsComponent implements OnInit {
   isCreateModalOpen = signal(false);
   isPayModalOpen = signal(false);
   selectedDebt = signal<DebtDto | null>(null);
-
-  newDebt = {
-    creditorDebtor: '',
-    description: '',
-    totalAmount: 0,
-    dueDate: new Date().toISOString().split('T')[0],
-    type: DebtType.IOwe
-  };
-
-  payAmount = 0;
-  payAccountId = '';
 
   totalIOwe = computed(() => 
     this.debtService.debts()
@@ -219,53 +133,9 @@ export class DebtsComponent implements OnInit {
     this.accountService.loadAccounts();
   }
 
-  async createDebt() {
-    try {
-      await this.debtService.createDebt(this.newDebt as any);
-      this.isCreateModalOpen.set(false);
-      this.resetNewDebt();
-    } catch (error) {
-      alert('Failed to create debt record.');
-    }
-  }
-
-  openPayModal(debt: DebtDto) {
-    this.selectedDebt.set(debt);
-    this.payAmount = debt.remainingAmount;
-    if (this.accountService.accounts().length > 0) {
-      this.payAccountId = this.accountService.accounts()[0].id;
-    }
-    this.isPayModalOpen.set(true);
-  }
-
-  async payDebt() {
-    const debt = this.selectedDebt();
-    if (!debt) return;
-
-    try {
-      await this.debtService.payDebt(debt.id, {
-        amount: this.payAmount,
-        accountId: this.payAccountId
-      });
-      this.isPayModalOpen.set(false);
-    } catch (error) {
-      alert('Payment failed. Check account balance.');
-    }
-  }
-
   async deleteDebt(id: string) {
     if (confirm('Permanently remove this debt record? Financial history remains unchanged.')) {
       await this.debtService.deleteDebt(id);
     }
-  }
-
-  private resetNewDebt() {
-    this.newDebt = {
-      creditorDebtor: '',
-      description: '',
-      totalAmount: 0,
-      dueDate: new Date().toISOString().split('T')[0],
-      type: DebtType.IOwe
-    };
   }
 }
