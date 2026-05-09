@@ -102,28 +102,28 @@ import { FormsModule } from '@angular/forms';
             <h2 class="text-xl font-black text-foreground uppercase tracking-widest mb-8">Log New Obligation</h2>
             
             <form (submit)="createDebt()" class="space-y-6">
-              <div class="space-y-2">
+              <div class="flex flex-col space-y-2">
                 <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Entity / Person</label>
-                <input type="text" [(ngModel)]="newDebt.creditorDebtor" name="creditorDebtor" class="input-premium" placeholder="Who?" required>
+                <input type="text" [(ngModel)]="newDebt.creditorDebtor" name="creditorDebtor" class="input-premium w-full" placeholder="Who?" required>
               </div>
 
-              <div class="space-y-2">
+              <div class="flex flex-col space-y-2">
                 <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Description</label>
-                <input type="text" [(ngModel)]="newDebt.description" name="description" class="input-premium" placeholder="What for?">
+                <input type="text" [(ngModel)]="newDebt.description" name="description" class="input-premium w-full" placeholder="What for?">
               </div>
 
               <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-2">
+                <div class="flex flex-col space-y-2">
                   <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Amount</label>
-                  <input type="number" [(ngModel)]="newDebt.totalAmount" name="totalAmount" class="input-premium" placeholder="0.00" required>
+                  <input type="number" [(ngModel)]="newDebt.totalAmount" name="totalAmount" class="input-premium w-full" placeholder="0.00" required>
                 </div>
-                <div class="space-y-2">
+                <div class="flex flex-col space-y-2">
                   <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Due Date</label>
-                  <input type="date" [(ngModel)]="newDebt.dueDate" name="dueDate" class="input-premium" required>
+                  <input type="date" [(ngModel)]="newDebt.dueDate" name="dueDate" class="input-premium w-full" required>
                 </div>
               </div>
 
-              <div class="space-y-2">
+              <div class="flex flex-col space-y-2">
                 <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Debt Direction</label>
                 <div class="flex bg-foreground/[0.03] p-1 rounded-xl border border-border">
                   <button type="button" (click)="newDebt.type = 1" 
@@ -158,14 +158,14 @@ import { FormsModule } from '@angular/forms';
                 <p class="text-[10px] font-bold text-subtle uppercase opacity-60">Remaining: {{ selectedDebt()?.remainingAmount | currency }}</p>
               </div>
 
-              <div class="space-y-2">
+              <div class="flex flex-col space-y-2">
                 <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Payment Amount</label>
-                <input type="number" [(ngModel)]="payAmount" name="payAmount" class="input-premium" [max]="selectedDebt()?.remainingAmount || 0" required>
+                <input type="number" [(ngModel)]="payAmount" name="payAmount" class="input-premium w-full" [max]="selectedDebt()?.remainingAmount || 0" required>
               </div>
 
-              <div class="space-y-2">
+              <div class="flex flex-col space-y-2">
                 <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Source Account</label>
-                <select [(ngModel)]="payAccountId" name="accountId" class="input-premium" required>
+                <select [(ngModel)]="payAccountId" name="accountId" class="input-premium w-full" required>
                    @for (acc of accountService.accounts(); track acc.id) {
                      <option [value]="acc.id">{{ acc.name }} ({{ acc.balance | currency }})</option>
                    }
