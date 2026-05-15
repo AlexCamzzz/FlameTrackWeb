@@ -109,10 +109,10 @@ import {
           </div>
         </header>
 
-        <nav class="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-surface/90 backdrop-blur-xl border-t border-border flex items-center justify-around px-2 z-[50]">
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 h-20 bg-surface/90 backdrop-blur-xl border-t border-border flex items-center justify-around px-1 z-[50]">
           <a *ngFor="let link of mobileNavLinks" [routerLink]="link.path" routerLinkActive="text-primary" [routerLinkActiveOptions]="{exact: link.path === '/'}"
              [attr.data-tutorial]="link.tutorialKey"
-             class="flex flex-col items-center justify-center space-y-1.5 w-16 transition-all active:scale-90 text-subtle">
+             class="flex flex-col items-center justify-center space-y-1.5 flex-1 transition-all active:scale-90 text-subtle">
              <ng-icon [name]="link.icon" class="text-xl"></ng-icon>
              <span class="text-[8px] font-black uppercase tracking-tighter">{{ link.label }}</span>
           </a>
@@ -160,6 +160,7 @@ export class App implements OnInit {
     { path: '/', label: 'Home', icon: 'heroHome', tutorialKey: 'nav-home-mobile' },
     { path: '/transactions', label: 'Ledger', icon: 'heroArrowsRightLeft', tutorialKey: 'nav-ledger-mobile' },
     { path: '/accounts', label: 'Vaults', icon: 'heroCreditCard', tutorialKey: 'nav-accounts-mobile' },
+    { path: '/budgets', label: 'Budgets', icon: 'heroChartPie', tutorialKey: 'nav-budgets-mobile' },
     { path: '/debts', label: 'Debts', icon: 'heroCircleStack', tutorialKey: 'nav-debts-mobile' },
     { path: '/goals', label: 'Targets', icon: 'heroTrophy', tutorialKey: 'nav-goals-mobile' }
   ];
