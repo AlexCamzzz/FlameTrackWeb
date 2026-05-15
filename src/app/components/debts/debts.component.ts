@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, ChangeDetectionStrategy, signal, computed } from '@angular/core';
-import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { DebtService } from '../../services/debt.service';
 import { AccountService } from '../../services/account.service';
 import { TransactionTypeDto, DebtType, DebtDto } from '../../models/transaction.dto';
@@ -10,7 +10,7 @@ import { PayDebtModalComponent } from './pay-debt-modal.component';
 @Component({
   selector: 'app-debts',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, DecimalPipe, FormsModule, CreateDebtModalComponent, PayDebtModalComponent],
+  imports: [CommonModule, CurrencyPipe, DatePipe, FormsModule, CreateDebtModalComponent, PayDebtModalComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="space-y-8 animate-fade-in pb-12">

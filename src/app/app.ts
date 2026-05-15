@@ -152,6 +152,7 @@ export class App implements OnInit {
     { path: '/transactions', label: 'History' },
     { path: '/accounts', label: 'Accounts' },
     { path: '/budgets', label: 'Budgets' },
+    { path: '/pocket-dimensions', label: 'Dimensions' },
     { path: '/debts', label: 'Debts' },
     { path: '/goals', label: 'Goals' }
   ];
@@ -159,10 +160,9 @@ export class App implements OnInit {
   mobileNavLinks = [
     { path: '/', label: 'Home', icon: 'heroHome', tutorialKey: 'nav-home-mobile' },
     { path: '/transactions', label: 'Ledger', icon: 'heroArrowsRightLeft', tutorialKey: 'nav-ledger-mobile' },
+    { path: '/pocket-dimensions', label: 'Nexus', icon: 'heroRocketLaunch', tutorialKey: 'nav-sandbox-mobile' },
     { path: '/accounts', label: 'Vaults', icon: 'heroCreditCard', tutorialKey: 'nav-accounts-mobile' },
-    { path: '/budgets', label: 'Budgets', icon: 'heroChartPie', tutorialKey: 'nav-budgets-mobile' },
-    { path: '/debts', label: 'Debts', icon: 'heroCircleStack', tutorialKey: 'nav-debts-mobile' },
-    { path: '/goals', label: 'Targets', icon: 'heroTrophy', tutorialKey: 'nav-goals-mobile' }
+    { path: '/budgets', label: 'Budgets', icon: 'heroChartPie', tutorialKey: 'nav-budgets-mobile' }
   ];
 
   settingsLinks = [

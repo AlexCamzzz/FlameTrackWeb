@@ -32,5 +32,17 @@ export const routes: Routes = [
   { path: 'account', component: AccountComponent, canActivate: [authGuard], title: 'FlameTrack — Profile Identity' },
   { path: 'preferences', component: PreferencesComponent, canActivate: [authGuard], title: 'FlameTrack — System Preferences' },
   { path: 'legal', component: LegalComponent, canActivate: [authGuard], title: 'FlameTrack — Governance & Rights' },
+  { 
+    path: 'pocket-dimensions', 
+    loadComponent: () => import('./components/sandbox/sandbox-hub.component').then(m => m.SandboxHubComponent),
+    canActivate: [authGuard],
+    title: 'FlameTrack — Pocket Dimensions'
+  },
+  { 
+    path: 'pocket-dimensions/:year/:month', 
+    loadComponent: () => import('./components/sandbox/sandbox-dimension.component').then(m => m.SandboxDimensionComponent),
+    canActivate: [authGuard],
+    title: 'FlameTrack — Dimension Terminal'
+  },
   { path: '**', redirectTo: '' }
 ];
