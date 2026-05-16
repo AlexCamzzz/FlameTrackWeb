@@ -150,6 +150,8 @@ export class SandboxDimensionComponent implements OnInit, OnDestroy {
   objectKeys = Object.keys;
 
   ngOnInit() {
+    this.accountService.loadAccounts();
+    this.categoryService.loadCategories();
     this.renderer.setAttribute(document.body, 'data-sandbox', 'active');
     this.route.params.subscribe(params => {
       this.loadSandbox(+params['year'], +params['month']);

@@ -10,7 +10,7 @@ import { CategoryDto } from '../../models/transaction.dto';
   imports: [CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-md animate-fade-in" (click)="close.emit()">
+    <div class="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 backdrop-blur-md animate-fade-in" (click)="close.emit()">
       <div class="card !p-0 w-full max-w-2xl overflow-hidden animate-slide-up border-border shadow-2xl" (click)="$event.stopPropagation()">
         
         <div class="p-8 border-b border-border flex justify-between items-center bg-foreground/[0.02]">
