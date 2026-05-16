@@ -8,12 +8,12 @@ import { SandboxDto, CreateSandboxMovementRequest } from '../../models/sandbox';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroArrowLeft, heroPlus, heroTrash, heroScale, heroBanknotes, heroArrowPath, heroCheck, heroEyeSlash } from '@ng-icons/heroicons/outline';
 import { TransactionTypeDto } from '../../models/transaction.dto';
-import { FormsModule } from '@angular/forms';
+import { AddSimulationModalComponent } from './add-simulation-modal.component';
 
 @Component({
   selector: 'app-sandbox-dimension',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgIconComponent, FormsModule],
+  imports: [CommonModule, RouterLink, NgIconComponent, AddSimulationModalComponent],
   providers: [provideIcons({ heroArrowLeft, heroPlus, heroTrash, heroScale, heroBanknotes, heroArrowPath, heroCheck, heroEyeSlash })],
   template: `
     <div class="space-y-8 animate-fade-in" *ngIf="sandbox() as data">
@@ -123,54 +123,12 @@ import { FormsModule } from '@angular/forms';
         </div>
       </div>
 
-      <!-- Simple Add Modal Placeholder -->
-      <div *ngIf="showAddModal()" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
-        <div class="w-full max-w-md bg-surface border border-border rounded-[3rem] p-10 shadow-2xl space-y-8">
-           <div class="space-y-2">
-              <h2 class="text-3xl font-black tracking-tighter">Add Simulation</h2>
-              <p class="text-subtle text-xs font-black uppercase tracking-widest">Inject a virtual event into this dimension</p>
-           </div>
-
-           <div class="space-y-4">
-              <div class="space-y-1">
-                <label class="text-[10px] font-black uppercase tracking-widest text-subtle">Description</label>
-                <input [(ngModel)]="newMove.description" class="w-full bg-foreground/[0.03] border border-border rounded-2xl p-4 text-sm font-bold focus:border-primary outline-none transition-all" placeholder="E.g. Bonus, Tax Return...">
-              </div>
-              <div class="grid grid-cols-2 gap-4">
-                <div class="space-y-1">
-                  <label class="text-[10px] font-black uppercase tracking-widest text-subtle">Amount</label>
-                  <input type="number" [(ngModel)]="newMove.amount" class="w-full bg-foreground/[0.03] border border-border rounded-2xl p-4 text-sm font-bold focus:border-primary outline-none">
-                </div>
-                <div class="space-y-1">
-                  <label class="text-[10px] font-black uppercase tracking-widest text-subtle">Type</label>
-                  <select [(ngModel)]="newMove.type" class="w-full bg-foreground/[0.03] border border-border rounded-2xl p-4 text-sm font-bold focus:border-primary outline-none appearance-none">
-                    <option [ngValue]="0">Income</option>
-                    <option [ngValue]="1">Expense</option>
-                  </select>
-                </div>
-              </div>
-              <div class="space-y-1">
-                <label class="text-[10px] font-black uppercase tracking-widest text-subtle">Account Snapshot</label>
-                <select [(ngModel)]="newMove.accountId" class="w-full bg-foreground/[0.03] border border-border rounded-2xl p-4 text-sm font-bold focus:border-primary outline-none appearance-none">
-                  <option *ngFor="let accId of objectKeys(data.initialBalances)" [value]="accId">{{ getAccountName(accId) }}</option>
-                </select>
-              </div>
-
-              <div class="flex items-center justify-between p-4 bg-foreground/[0.03] border border-border rounded-2xl">
-                <div class="space-y-0.5">
-                  <p class="text-xs font-black uppercase tracking-tight">Active for Projection</p>
-                  <p class="text-[10px] font-bold text-subtle">Include this movement in total balance</p>
-                </div>
-                <input type="checkbox" [(ngModel)]="newMove.isIncludedInBalance" class="w-6 h-6 rounded-lg border-2 border-border accent-primary cursor-pointer">
-              </div>
-           </div>
-
-           <div class="flex gap-4">
-              <button (click)="showAddModal.set(false)" class="flex-1 py-4 rounded-2xl border border-border text-xs font-black uppercase tracking-widest hover:bg-foreground/[0.05] transition-all">Cancel</button>
-              <button (click)="submitMovement()" class="flex-1 py-4 rounded-2xl bg-primary text-white text-xs font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all">Project Event</button>
-           </div>
-        </div>
-      </div>
+      <app-add-simulation-modal
+        *ngIf="showAddModal()"
+        [accounts]="getModalAccounts(data)"
+        (close)="showAddModal.set(false)"
+        (submit)="submitMovement($event, data.id)"
+      ></app-add-simulation-modal>
     </div>
   `,
   styles: [`
@@ -189,15 +147,6 @@ export class SandboxDimensionComponent implements OnInit, OnDestroy {
   sandbox = signal<SandboxDto | null>(null);
   showAddModal = signal(false);
 
-  newMove: CreateSandboxMovementRequest = {
-    accountId: '',
-    categoryId: '',
-    description: '',
-    amount: 0,
-    type: TransactionTypeDto.Income,
-    isIncludedInBalance: true
-  };
-
   objectKeys = Object.keys;
 
   ngOnInit() {
@@ -214,22 +163,14 @@ export class SandboxDimensionComponent implements OnInit, OnDestroy {
   loadSandbox(year: number, month: number) {
     this.sandboxService.getOrCreateSandbox(year, month).subscribe(res => {
       this.sandbox.set(res);
-      if (res.initialBalances && this.objectKeys(res.initialBalances).length > 0) {
-        this.newMove.accountId = this.objectKeys(res.initialBalances)[0];
-      }
     });
   }
 
-  submitMovement() {
-    const current = this.sandbox();
-    if (!current) return;
-
-    this.sandboxService.addMovement(current.id, this.newMove).subscribe(() => {
-      this.loadSandbox(current.year, current.month);
+  submitMovement(req: CreateSandboxMovementRequest, sandboxId: string) {
+    this.sandboxService.addMovement(sandboxId, req).subscribe(() => {
+      const current = this.sandbox();
+      if (current) this.loadSandbox(current.year, current.month);
       this.showAddModal.set(false);
-      this.newMove.description = '';
-      this.newMove.amount = 0;
-      this.newMove.isIncludedInBalance = true;
     });
   }
 
@@ -283,5 +224,12 @@ export class SandboxDimensionComponent implements OnInit, OnDestroy {
 
   getMonthName(m: number): string {
     return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m - 1];
+  }
+
+  getModalAccounts(data: SandboxDto): { id: string, name: string }[] {
+    return this.objectKeys(data.initialBalances).map(id => ({
+      id,
+      name: this.getAccountName(id)
+    }));
   }
 }
