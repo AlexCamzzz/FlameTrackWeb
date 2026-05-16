@@ -96,28 +96,51 @@ import { AddSimulationModalComponent } from './add-simulation-modal.component';
                  <p class="text-subtle text-xs font-black uppercase tracking-widest">No virtual events in this timeline</p>
               </div>
 
-              <div *ngFor="let m of data.movements" class="group flex items-center justify-between p-6 bg-surface border border-border rounded-3xl hover:border-primary/30 transition-all">
-                <div class="flex items-center space-x-6">
-                  <div [class]="m.type === 0 ? 'bg-income/10 text-income' : 'bg-expense/10 text-expense'" class="w-12 h-12 rounded-2xl flex items-center justify-center">
+              <div *ngFor="let m of data.movements" 
+                   class="group grid grid-cols-[1fr_auto_auto_auto] items-center gap-6 p-6 bg-surface border border-border rounded-3xl hover:border-primary/30 transition-all"
+                   [class.opacity-60]="!m.isIncludedInBalance">
+                
+                <div class="flex items-center space-x-6 min-w-0">
+                  <div [class]="m.type === 0 ? 'bg-income/10 text-income' : 'bg-expense/10 text-expense'" 
+                       class="w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center">
                     <ng-icon [name]="m.type === 0 ? 'heroPlus' : 'heroTrash'"></ng-icon>
                   </div>
-                  <div class="space-y-1">
-                    <h4 class="text-sm font-black text-foreground uppercase tracking-tight">{{ m.description }}</h4>
-                    <p class="text-[10px] font-bold text-subtle uppercase tracking-widest">{{ getCategoryName(m.categoryId) }} • {{ getAccountName(m.accountId) }}</p>
+                  <div class="space-y-1 truncate">
+                    <h4 class="text-sm font-black text-foreground uppercase tracking-tight truncate">{{ m.description }}</h4>
+                    <div class="flex items-center space-x-2">
+                       <p class="text-[10px] font-bold text-subtle uppercase tracking-widest truncate">
+                         {{ getCategoryName(m.categoryId) }} • {{ getAccountName(m.accountId) }}
+                       </p>
+                       <span *ngIf="m.expectedDate" class="text-[9px] font-black bg-foreground/[0.05] px-2 py-0.5 rounded-md text-subtle uppercase tracking-tighter border border-border">
+                         {{ m.expectedDate | date:'MMM d, y' }}
+                       </span>
+                    </div>
                   </div>
                 </div>
-                <div [class]="m.type === 0 ? 'text-income' : 'text-expense'" class="text-lg font-black tracking-tighter">
+
+                <div [class]="m.type === 0 ? 'text-income' : 'text-expense'" 
+                     class="text-lg font-black tracking-tighter w-40 text-right">
                   {{ m.type === 0 ? '+' : '-' }} {{ m.amount | currency:'MXN' }}
                 </div>
 
-                <div class="flex items-center space-x-2 ml-4">
-                  <button (click)="toggleInclusion(m)" [class]="m.isIncludedInBalance ? 'bg-primary/10 text-primary border-primary/20' : 'bg-foreground/[0.05] text-subtle border-border'" class="w-10 h-10 rounded-xl border flex items-center justify-center transition-all hover:scale-110" [title]="m.isIncludedInBalance ? 'Included in Projection' : 'Excluded from Projection'">
-                    <ng-icon [name]="m.isIncludedInBalance ? 'heroCheck' : 'heroEyeSlash'"></ng-icon>
-                  </button>
-                  <button (click)="deleteMovement(m.id!)" class="w-10 h-10 rounded-xl bg-expense/10 text-expense border border-expense/20 flex items-center justify-center hover:bg-expense hover:text-white transition-all hover:scale-110" title="Delete Movement">
-                    <ng-icon name="heroTrash"></ng-icon>
+                <!-- Slider Toggle -->
+                <div class="flex items-center px-2">
+                  <button (click)="toggleInclusion(m)" 
+                    class="relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 focus:outline-none border border-border"
+                    [class.bg-primary]="m.isIncludedInBalance"
+                    [class.bg-foreground/[0.1]]="!m.isIncludedInBalance">
+                    <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-all duration-300 shadow-sm"
+                      [class.translate-x-6]="m.isIncludedInBalance"
+                      [class.translate-x-1]="!m.isIncludedInBalance">
+                    </span>
                   </button>
                 </div>
+
+                <button (click)="deleteMovement(m.id!)" 
+                        class="w-10 h-10 rounded-xl bg-expense/10 text-expense border border-expense/20 flex items-center justify-center hover:bg-expense hover:text-white transition-all hover:scale-110" 
+                        title="Delete Movement">
+                  <ng-icon name="heroTrash"></ng-icon>
+                </button>
               </div>
            </div>
         </div>

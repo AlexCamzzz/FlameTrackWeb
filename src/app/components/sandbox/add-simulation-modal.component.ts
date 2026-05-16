@@ -43,10 +43,16 @@ import { CategoryService } from '../../services/category.service';
           </div>
 
           <div class="space-y-5">
-            <!-- Description -->
-            <div class="flex flex-col space-y-2">
-              <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Description</label>
-              <input name="description" [(ngModel)]="model.description" class="input-premium w-full shadow-inner" placeholder="E.g. Bonus, Tax Return..." required>
+            <!-- Description & Expected Date -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="md:col-span-2 flex flex-col space-y-2">
+                <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Description</label>
+                <input name="description" [(ngModel)]="model.description" class="input-premium w-full shadow-inner" placeholder="E.g. Bonus, Tax Return..." required>
+              </div>
+              <div class="flex flex-col space-y-2">
+                <label class="text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Expected Date</label>
+                <input name="expectedDate" type="date" [(ngModel)]="model.expectedDate" class="input-premium w-full shadow-inner text-xs font-bold uppercase tracking-tighter">
+              </div>
             </div>
 
             <!-- Amount & Category -->
@@ -123,7 +129,8 @@ export class AddSimulationModalComponent implements OnInit {
     amount: 0,
     type: TransactionTypeDto.Income,
     isIncludedInBalance: true,
-    accountId: ''
+    accountId: '',
+    expectedDate: undefined
   };
 
   ngOnInit() {
