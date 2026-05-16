@@ -1,0 +1,1 @@
+/mnt/shared/Development/FlameTrackWeb/GEMINI.md
