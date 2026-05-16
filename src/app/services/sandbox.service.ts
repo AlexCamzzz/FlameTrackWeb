@@ -22,4 +22,12 @@ export class SandboxService {
   resetSandbox(sandboxId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${sandboxId}`);
   }
+
+  deleteMovement(movementId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/movements/${movementId}`);
+  }
+
+  toggleMovementInclusion(movementId: string, isIncluded: boolean): Observable<SandboxMovementDto> {
+    return this.http.patch<SandboxMovementDto>(`${this.apiUrl}/movements/${movementId}/toggle?isIncluded=${isIncluded}`, {});
+  }
 }

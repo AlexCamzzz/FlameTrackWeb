@@ -6,7 +6,7 @@ import { AccountService } from '../../services/account.service';
 import { CategoryService } from '../../services/category.service';
 import { SandboxDto, CreateSandboxMovementRequest } from '../../models/sandbox';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
-import { heroArrowLeft, heroPlus, heroTrash, heroScale, heroBanknotes, heroArrowPath } from '@ng-icons/heroicons/outline';
+import { heroArrowLeft, heroPlus, heroTrash, heroScale, heroBanknotes, heroArrowPath, heroCheck, heroEyeSlash } from '@ng-icons/heroicons/outline';
 import { TransactionTypeDto } from '../../models/transaction.dto';
 import { FormsModule } from '@angular/forms';
 
@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-sandbox-dimension',
   standalone: true,
   imports: [CommonModule, RouterLink, NgIconComponent, FormsModule],
-  providers: [provideIcons({ heroArrowLeft, heroPlus, heroTrash, heroScale, heroBanknotes, heroArrowPath })],
+  providers: [provideIcons({ heroArrowLeft, heroPlus, heroTrash, heroScale, heroBanknotes, heroArrowPath, heroCheck, heroEyeSlash })],
   template: `
     <div class="space-y-8 animate-fade-in" *ngIf="sandbox() as data">
       <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-surface/50 p-8 rounded-[2rem] border border-border backdrop-blur-xl">
@@ -109,6 +109,15 @@ import { FormsModule } from '@angular/forms';
                 <div [class]="m.type === 0 ? 'text-income' : 'text-expense'" class="text-lg font-black tracking-tighter">
                   {{ m.type === 0 ? '+' : '-' }} {{ m.amount | currency:'MXN' }}
                 </div>
+
+                <div class="flex items-center space-x-2 ml-4">
+                  <button (click)="toggleInclusion(m)" [class]="m.isIncludedInBalance ? 'bg-primary/10 text-primary border-primary/20' : 'bg-foreground/[0.05] text-subtle border-border'" class="w-10 h-10 rounded-xl border flex items-center justify-center transition-all hover:scale-110" [title]="m.isIncludedInBalance ? 'Included in Projection' : 'Excluded from Projection'">
+                    <ng-icon [name]="m.isIncludedInBalance ? 'heroCheck' : 'heroEyeSlash'"></ng-icon>
+                  </button>
+                  <button (click)="deleteMovement(m.id!)" class="w-10 h-10 rounded-xl bg-expense/10 text-expense border border-expense/20 flex items-center justify-center hover:bg-expense hover:text-white transition-all hover:scale-110" title="Delete Movement">
+                    <ng-icon name="heroTrash"></ng-icon>
+                  </button>
+                </div>
               </div>
            </div>
         </div>
@@ -146,6 +155,14 @@ import { FormsModule } from '@angular/forms';
                   <option *ngFor="let accId of objectKeys(data.initialBalances)" [value]="accId">{{ getAccountName(accId) }}</option>
                 </select>
               </div>
+
+              <div class="flex items-center justify-between p-4 bg-foreground/[0.03] border border-border rounded-2xl">
+                <div class="space-y-0.5">
+                  <p class="text-xs font-black uppercase tracking-tight">Active for Projection</p>
+                  <p class="text-[10px] font-bold text-subtle">Include this movement in total balance</p>
+                </div>
+                <input type="checkbox" [(ngModel)]="newMove.isIncludedInBalance" class="w-6 h-6 rounded-lg border-2 border-border accent-primary cursor-pointer">
+              </div>
            </div>
 
            <div class="flex gap-4">
@@ -177,7 +194,8 @@ export class SandboxDimensionComponent implements OnInit, OnDestroy {
     categoryId: '',
     description: '',
     amount: 0,
-    type: TransactionTypeDto.Income
+    type: TransactionTypeDto.Income,
+    isIncludedInBalance: true
   };
 
   objectKeys = Object.keys;
@@ -211,6 +229,25 @@ export class SandboxDimensionComponent implements OnInit, OnDestroy {
       this.showAddModal.set(false);
       this.newMove.description = '';
       this.newMove.amount = 0;
+      this.newMove.isIncludedInBalance = true;
+    });
+  }
+
+  toggleInclusion(m: any) {
+    const current = this.sandbox();
+    if (!current) return;
+    
+    this.sandboxService.toggleMovementInclusion(m.id, !m.isIncludedInBalance).subscribe(() => {
+      this.loadSandbox(current.year, current.month);
+    });
+  }
+
+  deleteMovement(id: string) {
+    const current = this.sandbox();
+    if (!current || !confirm('Delete this virtual movement?')) return;
+
+    this.sandboxService.deleteMovement(id).subscribe(() => {
+      this.loadSandbox(current.year, current.month);
     });
   }
 
@@ -229,7 +266,7 @@ export class SandboxDimensionComponent implements OnInit, OnDestroy {
 
   calculateAccountFinal(accId: string, data: SandboxDto): number {
     let balance = data.initialBalances[accId] || 0;
-    data.movements.filter(m => m.accountId === accId).forEach(m => {
+    data.movements.filter(m => m.accountId === accId && m.isIncludedInBalance).forEach(m => {
       if (m.type === TransactionTypeDto.Income) balance += m.amount;
       else balance -= m.amount;
     });

@@ -17,6 +17,7 @@ export interface SandboxMovementDto {
   amount: number;
   type: TransactionTypeDto;
   date: string;
+  isIncludedInBalance: boolean;
 }
 
 export interface CreateSandboxMovementRequest {
@@ -25,4 +26,5 @@ export interface CreateSandboxMovementRequest {
   description: string;
   amount: number;
   type: TransactionTypeDto;
+  isIncludedInBalance: boolean;
 }
