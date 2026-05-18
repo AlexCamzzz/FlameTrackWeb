@@ -12,11 +12,13 @@ import { authGuard } from './auth.guard';
 import { AccountComponent } from './components/settings/account/account.component';
 import { PreferencesComponent } from './components/settings/preferences/preferences.component';
 import { LegalComponent } from './components/legal/legal.component';
+import { AiAdvisorComponent } from './components/ai-advisor/ai-advisor.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'FlameTrack — Terminal Access' },
   { path: 'register', component: RegisterComponent, title: 'FlameTrack — Forge Identity' },
   { path: '', component: DashboardComponent, canActivate: [authGuard], title: 'FlameTrack — Intelligence Overview' },
+  { path: 'ai-advisor', component: AiAdvisorComponent, canActivate: [authGuard], title: 'FlameTrack — Neural Advisor' },
   { path: 'transactions', component: TransactionsComponent, canActivate: [authGuard], title: 'FlameTrack — Financial Ledger' },
   { path: 'accounts', component: AccountsComponent, canActivate: [authGuard], title: 'FlameTrack — Liquidity Sources' },
   { path: 'budgets', component: BudgetsComponent, canActivate: [authGuard], title: 'FlameTrack — Capital Provisions' },

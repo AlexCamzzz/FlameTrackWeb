@@ -149,6 +149,7 @@ export class App implements OnInit {
 
   navLinks = [
     { path: '/', label: 'Dashboard' },
+    { path: '/ai-advisor', label: 'AI Advisor' },
     { path: '/transactions', label: 'History' },
     { path: '/accounts', label: 'Accounts' },
     { path: '/budgets', label: 'Budgets' },
@@ -159,6 +160,7 @@ export class App implements OnInit {
 
   mobileNavLinks = [
     { path: '/', label: 'Home', icon: 'heroHome', tutorialKey: 'nav-home-mobile' },
+    { path: '/ai-advisor', label: 'AI', icon: 'heroSparkles', tutorialKey: 'nav-ai-mobile' },
     { path: '/transactions', label: 'Ledger', icon: 'heroArrowsRightLeft', tutorialKey: 'nav-ledger-mobile' },
     { path: '/pocket-dimensions', label: 'Nexus', icon: 'heroRocketLaunch', tutorialKey: 'nav-sandbox-mobile' },
     { path: '/accounts', label: 'Vaults', icon: 'heroCreditCard', tutorialKey: 'nav-accounts-mobile' },

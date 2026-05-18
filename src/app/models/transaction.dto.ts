@@ -205,12 +205,22 @@ export interface UserDto {
   nickname?: string;
   avatar?: string;
   hasAcceptedTerms: boolean;
+  aiApiKey?: string;
+}
+
+export interface AiRequestDto {
+  message: string;
+}
+
+export interface AiResponseDto {
+  response: string;
 }
 
 export interface UpdateUserRequestDto {
   name?: string;
   nickname?: string;
   avatar?: string;
+  aiApiKey?: string;
 }
 
 export interface LoginRequestDto {

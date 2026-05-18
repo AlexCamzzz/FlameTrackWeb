@@ -103,12 +103,46 @@ import { UpdateUserRequestDto, UserDto } from '../../../models/transaction.dto';
         }
 
         @if (activeSection === 'integrations') {
-          <div class="card p-10 md:p-20 text-center animate-fade-in border-dashed border-border shadow-sm">
-             <div class="w-16 h-16 md:w-20 md:h-20 bg-foreground/[0.03] border border-border rounded-full flex items-center justify-center mx-auto mb-8 text-subtle opacity-30">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+          <div class="card space-y-8 animate-fade-in shadow-sm">
+             <div class="flex items-center space-x-4 mb-2">
+                <div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary border border-primary/20">
+                   <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                </div>
+                <div>
+                   <h3 class="text-[10px] font-black text-foreground uppercase tracking-widest">Neural Link</h3>
+                   <p class="text-subtle text-[9px] font-bold uppercase tracking-widest opacity-60">AI Financial Advisory</p>
+                </div>
              </div>
-             <h3 class="text-xs font-black text-foreground uppercase tracking-[0.3em] mb-3">Sync Core</h3>
-             <p class="text-subtle text-[11px] font-bold uppercase tracking-widest opacity-60 max-w-xs mx-auto leading-relaxed">Direct bank connectivity is currently in development.</p>
+
+             <div class="bg-foreground/[0.02] border border-border rounded-2xl p-6 md:p-8 space-y-6">
+                <p class="text-subtle text-xs font-bold leading-relaxed opacity-80">
+                   Connect your own <span class="text-foreground">OpenAI</span> intelligence core to receive personalized financial insights. Your data stays on your terms.
+                </p>
+
+                <div class="space-y-4">
+                   <label class="block text-[10px] font-black text-subtle uppercase tracking-widest ml-1">OpenAI API Key</label>
+                   <div class="relative">
+                      <input [type]="showApiKey ? 'text' : 'password'" name="aiApiKey" [(ngModel)]="editModel.aiApiKey" 
+                        class="input-premium w-full shadow-inner pr-12" placeholder="sk-...">
+                      <button type="button" (click)="showApiKey = !showApiKey" class="absolute right-4 top-1/2 -translate-y-1/2 text-subtle hover:text-foreground transition-colors">
+                         <svg *ngIf="!showApiKey" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                         <svg *ngIf="showApiKey" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" /></svg>
+                      </button>
+                   </div>
+                   <p class="text-[9px] text-subtle font-bold italic opacity-60">We do not store your key in plaintext. It is used only to authenticate requests to OpenAI.</p>
+                </div>
+
+                <div class="pt-4">
+                   <button (click)="saveProfile()" [disabled]="isSaving" class="btn-premium w-full md:w-auto md:px-12 py-5 shadow-lg shadow-primary/10">
+                      {{ isSaving ? 'Syncing...' : 'Save AI Credentials' }}
+                   </button>
+                </div>
+             </div>
+
+             <div class="p-10 text-center border-dashed border-border border rounded-2xl opacity-40 grayscale">
+                <h3 class="text-xs font-black text-foreground uppercase tracking-[0.3em] mb-2">Banking Sync</h3>
+                <p class="text-subtle text-[10px] font-bold uppercase tracking-widest leading-relaxed">Plaid / Salt Edge link in development.</p>
+             </div>
           </div>
         }
       </main>
@@ -123,11 +157,13 @@ export class AccountComponent implements OnInit {
   activeSection = 'profile';
   isSaving = false;
   isUploading = false;
+  showApiKey = false;
 
   editModel: UpdateUserRequestDto = {
     name: '',
     nickname: '',
-    avatar: undefined
+    avatar: undefined,
+    aiApiKey: ''
   };
 
   ngOnInit() {
@@ -136,6 +172,7 @@ export class AccountComponent implements OnInit {
       this.editModel.name = user.name;
       this.editModel.nickname = user.nickname || '';
       this.editModel.avatar = user.avatar;
+      this.editModel.aiApiKey = user.aiApiKey || '';
     }
   }
 
