@@ -155,9 +155,10 @@ export class AiAdvisorComponent {
         timestamp: new Date()
       }]);
     } catch (e: any) {
+      const errorMessage = e.error?.error || e.message || 'Unknown error calling the intelligence core.';
       this.messages.update(m => [...m, {
         role: 'ai',
-        content: `Connection Error: ${e.message || 'Unknown error calling the intelligence core.'}`,
+        content: `Error: ${errorMessage}`,
         timestamp: new Date()
       }]);
     } finally {
