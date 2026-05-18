@@ -110,31 +110,49 @@ import { UpdateUserRequestDto, UserDto } from '../../../models/transaction.dto';
                 </div>
                 <div>
                    <h3 class="text-[10px] font-black text-foreground uppercase tracking-widest">Neural Link</h3>
-                   <p class="text-subtle text-[9px] font-bold uppercase tracking-widest opacity-60">AI Financial Advisory</p>
+                   <p class="text-subtle text-[9px] font-bold uppercase tracking-widest opacity-60">Intelligence Core Configuration</p>
                 </div>
              </div>
 
-             <div class="bg-foreground/[0.02] border border-border rounded-2xl p-6 md:p-8 space-y-6">
+             <div class="bg-foreground/[0.02] border border-border rounded-2xl p-6 md:p-8 space-y-8">
                 <p class="text-subtle text-xs font-bold leading-relaxed opacity-80">
-                   Connect your own <span class="text-foreground">OpenAI</span> intelligence core to receive personalized financial insights. Your data stays on your terms.
+                   Select your preferred <span class="text-foreground">Intelligence Core</span> and provide your API credentials to activate live financial advisory.
                 </p>
 
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                   <button *ngFor="let p of providers" 
+                     type="button"
+                     (click)="editModel.aiProvider = p.id"
+                     [class.border-primary]="editModel.aiProvider === p.id"
+                     [class.bg-primary/5]="editModel.aiProvider === p.id"
+                     class="p-4 border border-border rounded-2xl text-left transition-all hover:bg-foreground/[0.03] group">
+                      <div class="flex items-center justify-between mb-2">
+                         <span class="text-[9px] font-black uppercase tracking-widest" [class.text-primary]="editModel.aiProvider === p.id">{{ p.name }}</span>
+                         <div *ngIf="editModel.aiProvider === p.id" class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                      </div>
+                      <p class="text-[8px] font-bold text-subtle uppercase leading-tight opacity-60">{{ p.description }}</p>
+                   </button>
+                </div>
+
                 <div class="space-y-4">
-                   <label class="block text-[10px] font-black text-subtle uppercase tracking-widest ml-1">OpenAI API Key</label>
+                   <div class="flex items-center justify-between">
+                      <label class="block text-[10px] font-black text-subtle uppercase tracking-widest ml-1">Secure API Credential</label>
+                      <span class="text-[8px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20">AES-256 Link</span>
+                   </div>
                    <div class="relative">
                       <input [type]="showApiKey ? 'text' : 'password'" name="aiApiKey" [(ngModel)]="editModel.aiApiKey" 
-                        class="input-premium w-full shadow-inner pr-12" placeholder="sk-...">
+                        class="input-premium w-full shadow-inner pr-12" [placeholder]="editModel.aiProvider === 'gemini' ? 'Enter Google AI Key...' : 'Enter API Key...'">
                       <button type="button" (click)="showApiKey = !showApiKey" class="absolute right-4 top-1/2 -translate-y-1/2 text-subtle hover:text-foreground transition-colors">
                          <svg *ngIf="!showApiKey" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                          <svg *ngIf="showApiKey" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" /></svg>
                       </button>
                    </div>
-                   <p class="text-[9px] text-subtle font-bold italic opacity-60">We do not store your key in plaintext. It is used only to authenticate requests to OpenAI.</p>
+                   <p class="text-[9px] text-subtle font-bold italic opacity-60">Credentials are transmitted over TLS and used only for authenticating requests to your selected provider.</p>
                 </div>
 
                 <div class="pt-4">
                    <button (click)="saveProfile()" [disabled]="isSaving" class="btn-premium w-full md:w-auto md:px-12 py-5 shadow-lg shadow-primary/10">
-                      {{ isSaving ? 'Syncing...' : 'Save AI Credentials' }}
+                      {{ isSaving ? 'Establishing Link...' : 'Synchronize Intelligence' }}
                    </button>
                 </div>
              </div>
@@ -163,8 +181,15 @@ export class AccountComponent implements OnInit {
     name: '',
     nickname: '',
     avatar: undefined,
-    aiApiKey: ''
+    aiApiKey: '',
+    aiProvider: 'openai'
   };
+
+  providers = [
+    { id: 'openai', name: 'OpenAI (ChatGPT)', description: 'Industry standard, balanced intelligence.' },
+    { id: 'gemini', name: 'Google (Gemini)', description: 'Fast, high-context multimodal core.' },
+    { id: 'claude', name: 'Anthropic (Claude)', description: 'Strategic, human-centric reasoning.' }
+  ];
 
   ngOnInit() {
     const user = this.authService.currentUser();
@@ -173,6 +198,7 @@ export class AccountComponent implements OnInit {
       this.editModel.nickname = user.nickname || '';
       this.editModel.avatar = user.avatar;
       this.editModel.aiApiKey = user.aiApiKey || '';
+      this.editModel.aiProvider = user.aiProvider || 'openai';
     }
   }
 

@@ -206,6 +206,7 @@ export interface UserDto {
   avatar?: string;
   hasAcceptedTerms: boolean;
   aiApiKey?: string;
+  aiProvider?: string;
 }
 
 export interface AiRequestDto {
@@ -221,6 +222,7 @@ export interface UpdateUserRequestDto {
   nickname?: string;
   avatar?: string;
   aiApiKey?: string;
+  aiProvider?: string;
 }
 
 export interface LoginRequestDto {
