@@ -22,7 +22,9 @@ interface Message {
           <div class="h-1 w-6 bg-primary mt-2"></div>
         </div>
         <div class="flex items-center space-x-3">
-          <span class="px-3 py-1 bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase rounded-lg tracking-widest shadow-sm">GPT-4o Intelligence</span>
+          <span class="px-3 py-1 bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase rounded-lg tracking-widest shadow-sm">
+            {{ (authService.currentUser()?.aiProvider || 'Neural') + ' Intelligence' }}
+          </span>
         </div>
       </div>
 
@@ -123,7 +125,7 @@ interface Message {
 })
 export class AiAdvisorComponent {
   private aiService = inject(AiService);
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
 
   messages = signal<Message[]>([]);
   userInput = '';
