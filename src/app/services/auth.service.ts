@@ -21,6 +21,8 @@ export class AuthService {
 
   isAuthenticated = signal<boolean>(false);
   currentUser = signal<UserDto | null>(null);
+  private refreshInProgress = false;
+  private refreshTokenPromise: Promise<AuthResponseDto> | null = null;
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
@@ -54,21 +56,34 @@ export class AuthService {
 
   async refreshToken() {
     if (!isPlatformBrowser(this.platformId)) return;
+
+    if (this.refreshInProgress && this.refreshTokenPromise) {
+      return this.refreshTokenPromise;
+    }
+
     const refreshToken = this.getRefreshToken();
     if (!refreshToken) {
       this.logout();
       throw new Error('No refresh token available');
     }
 
-    try {
-      const response = await firstValueFrom(this.http.post<AuthResponseDto>(`${this.apiUrl}/refresh`, { refreshToken }));
-      this.setSession(response);
-      return response;
-    } catch (error) {
-      console.error('Refresh token failed', error);
-      this.logout();
-      throw error;
-    }
+    this.refreshInProgress = true;
+    this.refreshTokenPromise = (async () => {
+      try {
+        const response = await firstValueFrom(this.http.post<AuthResponseDto>(`${this.apiUrl}/refresh`, { refreshToken }));
+        this.setSession(response);
+        return response;
+      } catch (error) {
+        console.error('Refresh token failed', error);
+        this.logout();
+        throw error;
+      } finally {
+        this.refreshInProgress = false;
+        this.refreshTokenPromise = null;
+      }
+    })();
+
+    return this.refreshTokenPromise;
   }
 
   async login(credentials: LoginRequestDto) {
@@ -76,6 +91,7 @@ export class AuthService {
     try {
       const response = await firstValueFrom(this.http.post<AuthResponseDto>(`${this.apiUrl}/login`, credentials));
       this.setSession(response);
+      this.router.navigate(['/']);
       return response;
     } catch (error) {
       console.error('Login failed', error);
@@ -88,6 +104,7 @@ export class AuthService {
     try {
       const response = await firstValueFrom(this.http.post<AuthResponseDto>(`${this.apiUrl}/register`, data));
       this.setSession(response);
+      this.router.navigate(['/']);
       return response;
     } catch (error) {
       console.error('Registration failed', error);
@@ -138,7 +155,6 @@ export class AuthService {
     localStorage.setItem(this.USER_KEY, JSON.stringify(auth.user));
     this.currentUser.set(auth.user);
     this.isAuthenticated.set(true);
-    this.router.navigate(['/']);
   }
 
   logout() {
