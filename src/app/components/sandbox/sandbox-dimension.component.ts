@@ -186,6 +186,7 @@ export class SandboxDimensionComponent implements OnInit, OnDestroy {
   }
 
   loadSandbox(year: number, month: number) {
+    this.sandbox.set(null);
     this.sandboxService.getOrCreateSandbox(year, month).subscribe(res => {
       this.sandbox.set(res);
     });
@@ -219,11 +220,14 @@ export class SandboxDimensionComponent implements OnInit, OnDestroy {
 
   resetDimension() {
     const current = this.sandbox();
-    if (!current || !confirm('Are you sure you want to collapse this dimension? All virtual data will be lost.')) return;
+    if (!current) return;
 
-    this.sandboxService.resetSandbox(current.id).subscribe(() => {
-      this.loadSandbox(current.year, current.month);
-    });
+    if (confirm('Are you sure you want to collapse this dimension? Virtual movements will be lost.')) {
+      const isHard = confirm('SYNC WITH REALITY?\n\nOK: Sync with real-world balances (Hard Reset)\nCancel: Keep temporal chain from previous month (Soft Reset)');
+      this.sandboxService.resetSandbox(current.id, isHard).subscribe(() => {
+        this.loadSandbox(current.year, current.month);
+      });
+    }
   }
 
   calculateInitialTotal(data: SandboxDto): number {

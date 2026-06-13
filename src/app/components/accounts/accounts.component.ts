@@ -19,16 +19,22 @@ import { ACCOUNT_ICONS } from '../../models/constants';
           <h1 class="text-xl md:text-2xl font-black text-foreground uppercase tracking-widest">Financial Sources</h1>
           <div class="h-1 w-8 bg-primary mt-2"></div>
         </div>
-        <button (click)="isModalOpen = true" data-tutorial="btn-new-account" class="btn-premium flex items-center space-x-2 w-full sm:w-auto">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
-          <span>New Account</span>
-        </button>
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <button (click)="resync()" class="btn-secondary flex items-center space-x-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest border border-border rounded-xl hover:bg-foreground/[0.05] transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" [class.animate-spin]="isResyncing()" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+            <span>Resync</span>
+          </button>
+          <button (click)="isModalOpen = true" data-tutorial="btn-new-account" class="btn-premium flex items-center space-x-2 flex-1 sm:flex-none justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
+            <span>New Account</span>
+          </button>
+        </div>
       </header>
 
       @if (isLoading()) {
          <div class="py-40 flex flex-col items-center justify-center space-y-4 opacity-40">
             <div class="w-10 h-10 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-            <p class="text-[10px] font-black uppercase tracking-[0.4em]">Querying Sources...</p>
+            <p class="text-[10px] font-black uppercase tracking-[0.4em]">{{ isResyncing() ? 'Recalculating Ledger...' : 'Querying Sources...' }}</p>
          </div>
       } @else {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -78,12 +84,26 @@ export class AccountsComponent implements OnInit {
   private sanitizer = inject(DomSanitizer);
   isModalOpen = false;
   isLoading = signal(true);
+  isResyncing = signal(false);
 
   async ngOnInit() {
     this.isLoading.set(true);
     try {
       await this.accountService.loadAccounts();
     } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  async resync() {
+    if (!confirm('This will recalculate all account balances from your transaction history. Continue?')) return;
+    
+    this.isResyncing.set(true);
+    this.isLoading.set(true);
+    try {
+      await this.accountService.resyncBalances();
+    } finally {
+      this.isResyncing.set(false);
       this.isLoading.set(false);
     }
   }

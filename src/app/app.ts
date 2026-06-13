@@ -12,30 +12,35 @@ import { filter } from 'rxjs';
 import { TermsModalComponent } from './components/legal/terms-modal.component';
 import { OnboardingComponent } from './components/onboarding/onboarding.component';
 import { TutorialOverlayComponent } from './components/tutorial/tutorial-overlay.component';
+import { PrivateVaultComponent } from './components/sandbox/private-vault.component';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { 
   heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, 
   heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, 
   heroLifebuoy, heroEye, heroEyeSlash, heroHome, heroCreditCard, 
   heroArrowsRightLeft, heroChartPie, heroTrophy, heroCircleStack,
-  heroRocketLaunch, heroCheckBadge, heroSparkles, heroArrowRight
+  heroRocketLaunch, heroCheckBadge, heroSparkles, heroArrowRight,
+  heroLockClosed
 } from '@ng-icons/heroicons/outline';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TermsModalComponent, OnboardingComponent, TutorialOverlayComponent, NgIconComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TermsModalComponent, OnboardingComponent, TutorialOverlayComponent, PrivateVaultComponent, NgIconComponent],
   providers: [provideIcons({ 
     heroUser, heroAdjustmentsHorizontal, heroTag, heroShieldCheck, 
     heroArrowRightOnRectangle, heroBars3, heroXMark, heroCog8Tooth, 
     heroLifebuoy, heroEye, heroEyeSlash, heroHome, heroCreditCard, 
     heroArrowsRightLeft, heroChartPie, heroTrophy, heroCircleStack,
-    heroRocketLaunch, heroCheckBadge, heroSparkles, heroArrowRight
+    heroRocketLaunch, heroCheckBadge, heroSparkles, heroArrowRight,
+    heroLockClosed
   })],
   template: `
     <app-tutorial-overlay />
     
     <app-onboarding *ngIf="showOnboarding()" (completed)="onOnboardingComplete()"></app-onboarding>
+
+    <app-private-vault *ngIf="showVault()" (close)="showVault.set(false)"></app-private-vault>
 
     <!-- Help FAB -->
     <button *ngIf="authService.isAuthenticated() && tutorialService.helpButtonVisible() && !tutorialService.isActive()"
@@ -43,6 +48,13 @@ import {
       data-tutorial="help-fab"
       class="fixed bottom-24 md:bottom-6 right-6 w-12 h-12 md:w-14 md:h-14 bg-primary text-white rounded-full shadow-2xl z-[60] flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group">
       <ng-icon name="heroLifebuoy" class="text-xl md:text-2xl group-hover:rotate-12 transition-transform"></ng-icon>
+    </button>
+
+    <!-- Private Vault FAB -->
+    <button *ngIf="authService.isAuthenticated() && !tutorialService.isActive()"
+      (click)="showVault.set(true)"
+      class="fixed bottom-40 md:bottom-24 right-6 w-12 h-12 md:w-14 md:h-14 bg-surface text-foreground border border-border rounded-full shadow-2xl z-[60] flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group">
+      <ng-icon name="heroLockClosed" class="text-xl md:text-2xl group-hover:scale-110 transition-transform"></ng-icon>
     </button>
 
     <ng-container *ngIf="authService.isAuthenticated(); else unauthLayout">
@@ -146,6 +158,7 @@ export class App implements OnInit {
   isDropdownOpen = false;
   isSettingsActive = signal(false);
   showOnboarding = signal(false);
+  showVault = signal(false);
 
   navLinks = [
     { path: '/', label: 'Dashboard' },

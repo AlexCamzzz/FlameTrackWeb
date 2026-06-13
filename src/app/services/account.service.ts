@@ -56,4 +56,15 @@ export class AccountService {
       throw error;
     }
   }
+
+  async resyncBalances() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    try {
+      await firstValueFrom(this.http.post(`${this.apiUrl}/resync`, {}));
+      await this.loadAccounts();
+    } catch (error) {
+      console.error('Error resyncing balances', error);
+      throw error;
+    }
+  }
 }

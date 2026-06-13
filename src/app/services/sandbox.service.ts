@@ -19,8 +19,8 @@ export class SandboxService {
     return this.http.post<SandboxMovementDto>(`${this.apiUrl}/${sandboxId}/movements`, request);
   }
 
-  resetSandbox(sandboxId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${sandboxId}`);
+  resetSandbox(sandboxId: string, hardReset: boolean = false): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${sandboxId}${hardReset ? '?hard=true' : ''}`);
   }
 
   deleteMovement(movementId: string): Observable<void> {
