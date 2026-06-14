@@ -48,7 +48,7 @@ import { VaultService, VaultItem } from '../../services/vault.service';
                autocomplete="one-time-code"
                inputmode="numeric"
                pattern="[0-9]*"
-               class="w-48 text-center text-3xl font-black tracking-[1em] py-4 bg-background border-2 border-border rounded-3xl focus:border-primary transition-all outline-none"
+               class="w-48 text-center text-3xl font-mono font-black tracking-[0.5em] pl-[0.5em] py-4 bg-background border-2 border-border rounded-3xl focus:border-primary transition-all outline-none"
                (keyup.enter)="onPinSubmit()"
                placeholder="****">
           </div>
