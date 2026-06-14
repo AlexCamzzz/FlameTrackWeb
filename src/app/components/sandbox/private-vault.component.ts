@@ -45,7 +45,10 @@ import { VaultService, VaultItem } from '../../services/vault.service';
 
           <div class="flex justify-center space-x-4">
              <input #pinInput type="password" maxlength="4" [(ngModel)]="pin" 
-               class="w-48 text-center text-3xl font-black tracking-[1em] py-4 bg-foreground/[0.03] border-2 border-border rounded-3xl focus:border-primary transition-all outline-none"
+               autocomplete="one-time-code"
+               inputmode="numeric"
+               pattern="[0-9]*"
+               class="w-48 text-center text-3xl font-black tracking-[1em] py-4 bg-background border-2 border-border rounded-3xl focus:border-primary transition-all outline-none"
                (keyup.enter)="onPinSubmit()"
                placeholder="****">
           </div>
@@ -144,7 +147,7 @@ import { VaultService, VaultItem } from '../../services/vault.service';
 })
 export class PrivateVaultComponent {
   vaultService = inject(VaultService);
-  close = new EventEmitter<void>();
+  @Output() close = new EventEmitter<void>();
 
   pin = '';
   error = signal(false);
